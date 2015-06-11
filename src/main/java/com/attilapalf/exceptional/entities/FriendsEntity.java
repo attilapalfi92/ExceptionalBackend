@@ -9,17 +9,26 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "friends", schema = "", catalog = "exceptional")
 public class FriendsEntity {
-    private BigInteger friendshipId;
+    private long friendshipId;
     private UsersEntity user1;
     private UsersEntity user2;
 
+    public FriendsEntity() {
+    }
+
+    public FriendsEntity(UsersEntity user1, UsersEntity user2) {
+        this.user1 = user1;
+        this.user2 = user2;
+    }
+
     @Id
-    @Column(name = "friendship_id", columnDefinition = "INT(20)", nullable = false, insertable = true, updatable = true)
-    public BigInteger getFriendshipId() {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "friendship_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
+    public long getFriendshipId() {
         return friendshipId;
     }
 
-    public void setFriendshipId(BigInteger friendshipId) {
+    public void setFriendshipId(long friendshipId) {
         this.friendshipId = friendshipId;
     }
 
@@ -30,15 +39,15 @@ public class FriendsEntity {
 
         FriendsEntity that = (FriendsEntity) o;
 
-        if (!friendshipId.equals(that.friendshipId)) return false;
+        if (friendshipId != that.friendshipId) return false;
 
         return true;
     }
 
-//    @Override
-//    public int hashCode() {
-//        return friendshipId;
-//    }
+    @Override
+    public int hashCode() {
+        return (int)friendshipId;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id_1", referencedColumnName = "user_id", nullable = false)

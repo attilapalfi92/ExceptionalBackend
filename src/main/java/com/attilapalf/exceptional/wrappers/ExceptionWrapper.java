@@ -1,13 +1,16 @@
 package com.attilapalf.exceptional.wrappers;
 
+import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
+
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Attila on 2015-06-11.
  */
 public class ExceptionWrapper {
-    private BigInteger fromWho, toWho;
+    private long fromWho, toWho;
     private Calendar creationDate;
     double longitude, latitude;
     int exceptionTypeId;
@@ -15,7 +18,17 @@ public class ExceptionWrapper {
     public ExceptionWrapper() {
     }
 
-    public ExceptionWrapper(BigInteger fromWho, BigInteger toWho, Calendar creationDate,
+    public ExceptionWrapper(Users2ExceptionsEntity exception) {
+        fromWho = exception.getFromUser().getUserId();
+        toWho = exception.getToUser().getUserId();
+        creationDate = Calendar.getInstance();
+        creationDate.setTimeInMillis(exception.getCreationDate().getTime());
+        longitude = exception.getLongitude();
+        latitude = exception.getLatitude();
+        exceptionTypeId = exception.getException().getTypeId();
+    }
+
+    public ExceptionWrapper(Long fromWho, Long toWho, Calendar creationDate,
                             double longitude, double latitude, int exceptionTypeId) {
         this.fromWho = fromWho;
         this.toWho = toWho;
@@ -25,19 +38,19 @@ public class ExceptionWrapper {
         this.exceptionTypeId = exceptionTypeId;
     }
 
-    public BigInteger getFromWho() {
+    public long getFromWho() {
         return fromWho;
     }
 
-    public void setFromWho(BigInteger fromWho) {
+    public void setFromWho(long fromWho) {
         this.fromWho = fromWho;
     }
 
-    public BigInteger getToWho() {
+    public long getToWho() {
         return toWho;
     }
 
-    public void setToWho(BigInteger toWho) {
+    public void setToWho(long toWho) {
         this.toWho = toWho;
     }
 

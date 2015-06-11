@@ -34,7 +34,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/user/byId/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<UsersEntity> getById(@PathVariable BigInteger userId) {
+    public ResponseEntity<UsersEntity> getById(@PathVariable long userId) {
         return new ResponseEntity<>(userCrud.findOne(userId), HttpStatus.OK);
     }
 

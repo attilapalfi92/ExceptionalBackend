@@ -17,7 +17,7 @@ public class ExceptionsEntity {
     private Collection<Users2ExceptionsEntity> users2ExceptionsesByTypeId;
 
     @Id
-    @Column(name = "type_id", columnDefinition = "INT(20)", nullable = false, insertable = true, updatable = true)
+    @Column(name = "type_id", columnDefinition = "INT(10)", nullable = false, insertable = true, updatable = true)
     public int getTypeId() {
         return typeId;
     }

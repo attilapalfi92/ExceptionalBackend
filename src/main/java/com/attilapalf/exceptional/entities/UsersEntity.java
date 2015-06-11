@@ -12,7 +12,7 @@ import java.util.Collection;
 @Table(name = "users", schema = "", catalog = "exceptional")
 public class UsersEntity {
 
-    private BigInteger userId;
+    private long userId;
     private Collection<DevicesEntity> devices;
 
     public UsersEntity() {
@@ -20,12 +20,12 @@ public class UsersEntity {
     }
 
     @Id
-    @Column(name = "user_id", columnDefinition = "INT(20)", nullable = false, insertable = true, updatable = true)
-    public BigInteger getUserId() {
+    @Column(name = "user_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -36,7 +36,7 @@ public class UsersEntity {
 
         UsersEntity that = (UsersEntity) o;
 
-        if (!userId.equals(that.userId)) return false;
+        if (userId != that.userId) return false;
 
         return true;
     }
@@ -51,9 +51,9 @@ public class UsersEntity {
     }
 
 
-    public boolean hasDevice(BigInteger deviceId) {
+    public boolean hasDevice(long deviceId) {
         for (DevicesEntity d : devices) {
-            if (d.getDeviceId().equals(deviceId)) {
+            if (d.getDeviceId() == deviceId) {
                 return true;
             }
         }

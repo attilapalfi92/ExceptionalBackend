@@ -1,46 +1,46 @@
 package com.attilapalf.exceptional.wrappers;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by Attila on 2015-06-11.
  */
 public class RegistrationRequestBody {
-    private BigInteger deviceId, userId;
-    private List<BigInteger> friendsIds;
+    private long deviceId, userId;
+    private Collection<Long> friendsIds;
 
     public RegistrationRequestBody() {
     }
 
-    public RegistrationRequestBody(BigInteger deviceId, BigInteger userId, List<BigInteger> friendsIds) {
+    public RegistrationRequestBody(long deviceId, long userId, List<Long> friendsIds) {
         this.deviceId = deviceId;
         this.userId = userId;
         this.friendsIds = friendsIds;
     }
 
-    public BigInteger getDeviceId() {
+    public long getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(BigInteger deviceId) {
+    public void setDeviceId(long deviceId) {
         this.deviceId = deviceId;
     }
 
-    public BigInteger getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public List<BigInteger> getFriendsIds() {
+    public Collection<Long> getFriendsIds() {
         return friendsIds;
     }
 
-    public void setFriendsIds(List<BigInteger> friendsIds) {
+    public void setFriendsIds(Collection<Long> friendsIds) {
         this.friendsIds = friendsIds;
     }
 }
