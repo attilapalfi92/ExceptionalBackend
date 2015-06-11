@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - exceptional@localhost" uuid="f91435fc-3648-4231-a3e2-8a3b9f8565ec">
+    <database-info product="MySQL" version="5.6.22-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="exceptional"/>
+    <table name="devices" schema="" catalog="exceptional" type="TABLE">
+      <column name="device_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="device_id"/>
+      <foreign-key name="user_fk" columns="user_id" ref-table="users" ref-schema="" ref-catalog="exceptional" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="user_fk_idx" unique="false" columns="user_id"/>
+    </table>
+    <table name="exceptions" schema="" catalog="exceptional" type="TABLE">
+      <column name="type_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="short_name" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <column name="prefix" sqlType="VARCHAR" precision="500" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="3000" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="type_id"/>
+      <exported-key name="exception_type_id_fk" table="users_2_exceptions" schema="" catalog="exceptional" columns="exception"/>
+      <index name="type_id_UNIQUE" unique="true" columns="type_id"/>
+    </table>
+    <table name="friends" schema="" catalog="exceptional" type="TABLE">
+      <column name="friendship_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id_1" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id_2" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="friendship_id"/>
+      <foreign-key name="user_id_1_fk" columns="user_id_1" ref-table="users" ref-schema="" ref-catalog="exceptional" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="user_id_2_fk" columns="user_id_2" ref-table="users" ref-schema="" ref-catalog="exceptional" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="friendship_id_UNIQUE" unique="true" columns="friendship_id"/>
+      <index name="user_id_1_fk_idx" unique="false" columns="user_id_1"/>
+      <index name="user_id_2_fk_idx" unique="false" columns="user_id_2"/>
+    </table>
+    <table name="users" schema="" catalog="exceptional" type="TABLE">
+      <column name="user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="user_id"/>
+      <exported-key name="user_fk" table="devices" schema="" catalog="exceptional" columns="user_id"/>
+      <exported-key name="user_id_1_fk" table="friends" schema="" catalog="exceptional" columns="user_id_1"/>
+      <exported-key name="user_id_2_fk" table="friends" schema="" catalog="exceptional" columns="user_id_2"/>
+      <exported-key name="from_user_id_fk" table="users_2_exceptions" schema="" catalog="exceptional" columns="from_user_id"/>
+      <exported-key name="to_user_id_fk" table="users_2_exceptions" schema="" catalog="exceptional" columns="to_user_id"/>
+      <index name="user_id_UNIQUE" unique="true" columns="user_id"/>
+    </table>
+    <table name="users_2_exceptions" schema="" catalog="exceptional" type="TABLE">
+      <column name="u2e_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="from_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="exception" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="to_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="longitude" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <column name="latitude" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <column name="creation_date" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
+      <primary-key name="PRIMARY" columns="u2e_id"/>
+      <foreign-key name="exception_type_id_fk" columns="exception" ref-table="exceptions" ref-schema="" ref-catalog="exceptional" ref-columns="type_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="from_user_id_fk" columns="from_user_id" ref-table="users" ref-schema="" ref-catalog="exceptional" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="to_user_id_fk" columns="to_user_id" ref-table="users" ref-schema="" ref-catalog="exceptional" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="u2e_id_UNIQUE" unique="true" columns="u2e_id"/>
+      <index name="exception_type_id_fk_idx" unique="false" columns="exception"/>
+      <index name="to_user_id_fk_idx" unique="false" columns="to_user_id"/>
+      <index name="user_id_fk_idx" unique="false" columns="from_user_id"/>
+    </table>
+  </data-source>
+</component>
