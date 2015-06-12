@@ -13,6 +13,7 @@ import java.util.Collection;
 public class UsersEntity {
 
     private long userId;
+    private long userDbId;
     private Collection<DevicesEntity> devices;
 
     public UsersEntity() {
@@ -27,6 +28,16 @@ public class UsersEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @GeneratedValue
+    @Column(name = "user_db_id", columnDefinition = "BIGINT(255)", nullable = false, updatable = true, insertable = false, unique = true)
+    public long getUserDbId() {
+        return userDbId;
+    }
+
+    public void setUserDbId(long userDbId) {
+        this.userDbId = userDbId;
     }
 
     @Override

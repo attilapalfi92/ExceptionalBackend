@@ -4,6 +4,7 @@ import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Attila on 2015-06-11.
@@ -11,4 +12,6 @@ import java.util.Collection;
 public interface U2ECrudCustom {
 
     public Collection<Users2ExceptionsEntity> findExceptionsByUser(UsersEntity user);
+
+    public List<Users2ExceptionsEntity> findExceptionsBetweenIds(long idFrom, long idTo);
 }

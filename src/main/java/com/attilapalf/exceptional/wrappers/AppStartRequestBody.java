@@ -7,14 +7,15 @@ import java.util.List;
 /**
  * Created by Attila on 2015-06-11.
  */
-public class RegistrationRequestBody {
+public class AppStartRequestBody {
     private long deviceId, userId;
     private Collection<Long> friendsIds;
+    private List<Long> exceptionIds;
 
-    public RegistrationRequestBody() {
+    public AppStartRequestBody() {
     }
 
-    public RegistrationRequestBody(long deviceId, long userId, List<Long> friendsIds) {
+    public AppStartRequestBody(long deviceId, long userId, List<Long> friendsIds) {
         this.deviceId = deviceId;
         this.userId = userId;
         this.friendsIds = friendsIds;
@@ -42,5 +43,13 @@ public class RegistrationRequestBody {
 
     public void setFriendsIds(Collection<Long> friendsIds) {
         this.friendsIds = friendsIds;
+    }
+
+    public List<Long> getExceptionIds() {
+        return exceptionIds;
+    }
+
+    public void setExceptionIds(List<Long> exceptionIds) {
+        this.exceptionIds = exceptionIds;
     }
 }

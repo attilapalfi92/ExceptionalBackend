@@ -7,8 +7,8 @@ import com.attilapalf.exceptional.repositories.DeviceCrud;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.repositories.U2ECrud;
 import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
-import com.attilapalf.exceptional.wrappers.RegistrationRequestBody;
-import com.attilapalf.exceptional.wrappers.RegistrationResponseBody;
+import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
+import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +29,38 @@ public class UserBusinessLogic {
     @Autowired
     private U2ECrud u2eCrud;
 
+    private final int maxExceptionsPerUser = 100000;
+
+
     @Transactional
-    public RegistrationResponseBody registerUser(RegistrationRequestBody requestBody) {
-        RegistrationResponseBody responseBody = new RegistrationResponseBody();
+    public AppStartResponseBody appStart(AppStartRequestBody requestBody) {
+        // TODO: by default on app start the user only gets the new exceptions since the last known from the client
+        // TODO: if the user wants to refresh every exceptions, he has to pull down the list --> other method on backend
+        if (requestBody.getExceptionIds().size() != 0) {
+            long fromId = requestBody.getExceptionIds().get(0);
+            long toId = (fromId % maxExceptionsPerUser) + maxExceptionsPerUser;
+            List<Users2ExceptionsEntity> newExceptions = u2eCrud.findExceptionsBetweenIds(fromId, toId);
+
+            if (newExceptions.size() > 0) {
+                List<ExceptionWrapper> exceptionWrappers = new ArrayList<>(newExceptions.size());
+                for(Users2ExceptionsEntity u2e : newExceptions) {
+                    exceptionWrappers.add(new ExceptionWrapper(u2e));
+                }
+                AppStartResponseBody responseBody = new AppStartResponseBody();
+
+                // return with new exceptions, if there were any
+                responseBody.setMyExceptions(exceptionWrappers);
+            }
+        }
+
+        // else return with empty response
+        return new AppStartResponseBody();
+    }
+
+
+    @Transactional
+    public AppStartResponseBody firstAppStart(AppStartRequestBody requestBody) {
+        AppStartResponseBody responseBody = new AppStartResponseBody();
         UsersEntity user = userCrud.findOne(requestBody.getUserId());
         Collection<Long> facebookFriends = requestBody.getFriendsIds();
 
@@ -61,19 +90,20 @@ public class UserBusinessLogic {
 
         // now finding the user's exceptions
         Collection<Users2ExceptionsEntity> exceptions = u2eCrud.findExceptionsByUser(user);
-        Collection<ExceptionWrapper> excWrappers = new ArrayList<>();
+        List<ExceptionWrapper> excWrappers = new ArrayList<>();
 
         for (Users2ExceptionsEntity e : exceptions) {
             excWrappers.add(new ExceptionWrapper(e));
         }
 
         responseBody.setMyExceptions(excWrappers);
+        responseBody.setExceptionIdStarter(user.getUserDbId() * maxExceptionsPerUser);
 
         return responseBody;
     }
 
 
-    private UsersEntity manageNewDevice(RegistrationRequestBody requestBody, UsersEntity user) {
+    private UsersEntity manageNewDevice(AppStartRequestBody requestBody, UsersEntity user) {
         // create the device and save to database
         DevicesEntity device = new DevicesEntity();
         device.setDeviceId(requestBody.getDeviceId());
