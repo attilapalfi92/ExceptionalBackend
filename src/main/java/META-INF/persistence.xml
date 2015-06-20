@@ -3,7 +3,7 @@
 
     <persistence-unit name="NewPersistenceUnit">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>com.attilapalf.exceptional.entities.ExceptionsEntity</class>
+        <class>com.attilapalf.exceptional.entities.ExceptionTypesEntity</class>
         <class>com.attilapalf.exceptional.entities.FriendsEntity</class>
         <class>com.attilapalf.exceptional.entities.UsersEntity</class>
         <class>com.attilapalf.exceptional.entities.Users2ExceptionsEntity</class>

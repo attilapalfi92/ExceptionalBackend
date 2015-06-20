@@ -62,9 +62,9 @@ public class UsersEntity {
     }
 
 
-    public boolean hasDevice(long deviceId) {
+    public boolean hasDevice(String deviceId) {
         for (DevicesEntity d : devices) {
-            if (d.getDeviceId() == deviceId) {
+            if (d.getDeviceId().equals(deviceId)) {
                 return true;
             }
         }

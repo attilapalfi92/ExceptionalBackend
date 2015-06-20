@@ -9,16 +9,16 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "devices", schema = "", catalog = "exceptional")
 public class DevicesEntity {
-    private long deviceId;
+    private String deviceId;
     private UsersEntity user;
 
     @Id
-    @Column(name = "device_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
-    public long getDeviceId() {
+    @Column(name = "device_id", columnDefinition = "VARCHAR(18)", nullable = false, insertable = true, updatable = true)
+    public String getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(long deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
@@ -29,15 +29,11 @@ public class DevicesEntity {
 
         DevicesEntity that = (DevicesEntity) o;
 
-        if (deviceId != that.deviceId) return false;
+        if (!deviceId.equals(that.deviceId)) return false;
 
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        return (int)deviceId;
-    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

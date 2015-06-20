@@ -40,9 +40,16 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/firstAppStart", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/firstAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> userFirstAppStart(@RequestBody AppStartRequestBody requestBody) {
-        return new ResponseEntity<>(userBusinessLogic.firstAppStart(requestBody), HttpStatus.OK);
+        try {
+            AppStartResponseBody response = userBusinessLogic.firstAppStart(requestBody);
+            ResponseEntity<AppStartResponseBody> result = new ResponseEntity<>(response, HttpStatus.OK);
+            return result;
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return null;
     }
 
 

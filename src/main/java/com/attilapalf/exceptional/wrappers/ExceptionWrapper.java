@@ -2,9 +2,7 @@ package com.attilapalf.exceptional.wrappers;
 
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 
-import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Attila on 2015-06-11.
@@ -14,6 +12,7 @@ public class ExceptionWrapper {
     private Calendar creationDate;
     double longitude, latitude;
     int exceptionTypeId;
+    long instanceId;
 
     public ExceptionWrapper() {
     }
@@ -26,16 +25,26 @@ public class ExceptionWrapper {
         longitude = exception.getLongitude();
         latitude = exception.getLatitude();
         exceptionTypeId = exception.getException().getTypeId();
+        instanceId = exception.getU2EId();
     }
 
     public ExceptionWrapper(Long fromWho, Long toWho, Calendar creationDate,
-                            double longitude, double latitude, int exceptionTypeId) {
+                            double longitude, double latitude, int exceptionTypeId, long instanceId) {
         this.fromWho = fromWho;
         this.toWho = toWho;
         this.creationDate = creationDate;
         this.longitude = longitude;
         this.latitude = latitude;
         this.exceptionTypeId = exceptionTypeId;
+        this.instanceId = instanceId;
+    }
+
+    public long getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(long instanceId) {
+        this.instanceId = instanceId;
     }
 
     public long getFromWho() {

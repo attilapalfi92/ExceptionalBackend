@@ -1,7 +1,6 @@
 package com.attilapalf.exceptional.entities;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
@@ -14,9 +13,22 @@ public class Users2ExceptionsEntity {
     private double longitude;
     private double latitude;
     private Timestamp creationDate;
-    private ExceptionsEntity exception;
+    private ExceptionTypesEntity exception;
     private UsersEntity fromUser;
     private UsersEntity toUser;
+
+    public Users2ExceptionsEntity() {
+    }
+
+    public Users2ExceptionsEntity(long u2EId, double longitude, double latitude, Timestamp creationDate,
+                                  UsersEntity fromUser, UsersEntity toUser) {
+        this.u2EId = u2EId;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.creationDate = creationDate;
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+    }
 
     @Id
     @Column(name = "u2e_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
@@ -88,11 +100,11 @@ public class Users2ExceptionsEntity {
 
     @ManyToOne
     @JoinColumn(name = "exception", referencedColumnName = "type_id", nullable = false)
-    public ExceptionsEntity getException() {
+    public ExceptionTypesEntity getException() {
         return exception;
     }
 
-    public void setException(ExceptionsEntity exceptionsByException) {
+    public void setException(ExceptionTypesEntity exceptionsByException) {
         this.exception = exceptionsByException;
     }
 
