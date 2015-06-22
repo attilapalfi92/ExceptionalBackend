@@ -1,10 +1,13 @@
 package com.attilapalf.exceptional.controllers;
 
+import com.attilapalf.exceptional.businessLogic.ExceptionBusinessLogic;
 import com.attilapalf.exceptional.businessLogic.UserBusinessLogic;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
 import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
+import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
+import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,7 +56,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "user/appStart", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/appStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> userAppStart(@RequestBody AppStartRequestBody requestBody) {
         return new ResponseEntity<>(userBusinessLogic.appStart(requestBody), HttpStatus.OK);
     }

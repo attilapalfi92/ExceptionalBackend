@@ -89,7 +89,7 @@ public class ExceptionTypesEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "exception")
+    @OneToMany(mappedBy = "exceptionType")
     public Collection<Users2ExceptionsEntity> getUsers2ExceptionsByTypeId() {
         return users2ExceptionsByTypeId;
     }

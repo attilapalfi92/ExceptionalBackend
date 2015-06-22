@@ -2,17 +2,15 @@ package com.attilapalf.exceptional.wrappers;
 
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 
-import java.util.Calendar;
-
 /**
  * Created by Attila on 2015-06-11.
  */
 public class ExceptionWrapper {
     private long fromWho, toWho;
-    private Calendar creationDate;
-    double longitude, latitude;
-    int exceptionTypeId;
-    long instanceId;
+    private long timeInMillis;
+    private double longitude, latitude;
+    private int exceptionTypeId;
+    private long instanceId;
 
     public ExceptionWrapper() {
     }
@@ -20,19 +18,18 @@ public class ExceptionWrapper {
     public ExceptionWrapper(Users2ExceptionsEntity exception) {
         fromWho = exception.getFromUser().getUserId();
         toWho = exception.getToUser().getUserId();
-        creationDate = Calendar.getInstance();
-        creationDate.setTimeInMillis(exception.getCreationDate().getTime());
+        timeInMillis = exception.getCreationDate().getTime();
         longitude = exception.getLongitude();
         latitude = exception.getLatitude();
-        exceptionTypeId = exception.getException().getTypeId();
+        exceptionTypeId = exception.getExceptionType().getTypeId();
         instanceId = exception.getU2EId();
     }
 
-    public ExceptionWrapper(Long fromWho, Long toWho, Calendar creationDate,
+    public ExceptionWrapper(Long fromWho, Long toWho, long timeInMillis,
                             double longitude, double latitude, int exceptionTypeId, long instanceId) {
         this.fromWho = fromWho;
         this.toWho = toWho;
-        this.creationDate = creationDate;
+        this.timeInMillis = timeInMillis;
         this.longitude = longitude;
         this.latitude = latitude;
         this.exceptionTypeId = exceptionTypeId;
@@ -63,12 +60,12 @@ public class ExceptionWrapper {
         this.toWho = toWho;
     }
 
-    public Calendar getCreationDate() {
-        return creationDate;
+    public long getTimeInMillis() {
+        return timeInMillis;
     }
 
-    public void setCreationDate(Calendar creationDate) {
-        this.creationDate = creationDate;
+    public void setTimeInMillis(long timeInMillis) {
+        this.timeInMillis = timeInMillis;
     }
 
     public double getLongitude() {

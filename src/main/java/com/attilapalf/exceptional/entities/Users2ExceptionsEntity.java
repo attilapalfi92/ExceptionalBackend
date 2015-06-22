@@ -13,7 +13,7 @@ public class Users2ExceptionsEntity {
     private double longitude;
     private double latitude;
     private Timestamp creationDate;
-    private ExceptionTypesEntity exception;
+    private ExceptionTypesEntity exceptionType;
     private UsersEntity fromUser;
     private UsersEntity toUser;
 
@@ -31,6 +31,7 @@ public class Users2ExceptionsEntity {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "u2e_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
     public long getU2EId() {
         return u2EId;
@@ -99,13 +100,13 @@ public class Users2ExceptionsEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "exception", referencedColumnName = "type_id", nullable = false)
-    public ExceptionTypesEntity getException() {
-        return exception;
+    @JoinColumn(name = "exception_type_id", referencedColumnName = "type_id", nullable = false)
+    public ExceptionTypesEntity getExceptionType() {
+        return exceptionType;
     }
 
-    public void setException(ExceptionTypesEntity exceptionsByException) {
-        this.exception = exceptionsByException;
+    public void setExceptionType(ExceptionTypesEntity exceptionsByException) {
+        this.exceptionType = exceptionsByException;
     }
 
     @ManyToOne
