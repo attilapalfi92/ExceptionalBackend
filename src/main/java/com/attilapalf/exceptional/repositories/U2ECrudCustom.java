@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface U2ECrudCustom {
 
-    public Collection<Users2ExceptionsEntity> findExceptionsByUser(UsersEntity user);
+    Collection<Users2ExceptionsEntity> findExceptionsByUser(UsersEntity user);
 
-    public List<Users2ExceptionsEntity> findExceptionsBetweenIds(long idFrom, long idTo);
+    List<Users2ExceptionsEntity> findExceptionsBetweenIds(long idFrom, long idTo);
 
-    public String saveNewException(ExceptionWrapper exceptionWrapper);
+    String saveNewException(ExceptionWrapper exceptionWrapper);
 }
