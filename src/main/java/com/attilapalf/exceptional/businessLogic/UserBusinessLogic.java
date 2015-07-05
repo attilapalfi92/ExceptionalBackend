@@ -81,6 +81,7 @@ public class UserBusinessLogic {
         else {
 
             user.setGcmId(requestBody.getRegId());
+            user = userCrud.save(user);
             // refreshing the user's friendships
             refreshUsersFriendships(user, facebookFriends);
         }
