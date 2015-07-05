@@ -16,5 +16,5 @@ public interface U2ECrudCustom {
 
     List<Users2ExceptionsEntity> findExceptionsBetweenIds(long idFrom, long idTo);
 
-    String saveNewException(ExceptionWrapper exceptionWrapper);
+    Users2ExceptionsEntity saveNewException(ExceptionWrapper exceptionWrapper);
 }

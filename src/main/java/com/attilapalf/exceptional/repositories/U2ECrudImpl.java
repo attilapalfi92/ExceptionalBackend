@@ -45,7 +45,7 @@ public class U2ECrudImpl implements U2ECrudCustom {
     }
 
     @Override
-    public String saveNewException(ExceptionWrapper exceptionWrapper) {
+    public Users2ExceptionsEntity saveNewException(ExceptionWrapper exceptionWrapper) {
         Users2ExceptionsEntity exception = new Users2ExceptionsEntity();
         exception.setCreationDate(new Timestamp(exceptionWrapper.getTimeInMillis()));
         exception.setExceptionType(em.getReference(ExceptionTypesEntity.class, exceptionWrapper.getExceptionTypeId()));
@@ -56,6 +56,6 @@ public class U2ECrudImpl implements U2ECrudCustom {
 
         em.persist(exception);
 
-        return exception.getExceptionType().getShortName();
+        return exception;
     }
 }

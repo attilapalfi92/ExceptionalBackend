@@ -43,12 +43,14 @@
     <table name="users" schema="" catalog="exceptional" type="TABLE">
       <column name="user_id" sqlType="BIGINT UNSIGNED" precision="20" scale="0" nullable="false" jdbcType="-5"/>
       <column name="user_db_id" sqlType="BIGINT UNSIGNED" precision="20" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="gcm_id" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="user_id"/>
       <exported-key name="user_fk" table="devices" schema="" catalog="exceptional" columns="user_id"/>
       <exported-key name="user_1_fk" table="friends" schema="" catalog="exceptional" columns="user_id_1"/>
       <exported-key name="user_2_fk" table="friends" schema="" catalog="exceptional" columns="user_id_2"/>
       <exported-key name="from_user_fk" table="users_2_exceptions" schema="" catalog="exceptional" columns="from_user_id"/>
       <exported-key name="to_user_fk" table="users_2_exceptions" schema="" catalog="exceptional" columns="to_user_id"/>
+      <index name="gcm_id_UNIQUE" unique="true" columns="gcm_id"/>
       <index name="user_db_id_UNIQUE" unique="true" columns="user_db_id"/>
       <index name="user_id_UNIQUE" unique="true" columns="user_id"/>
     </table>

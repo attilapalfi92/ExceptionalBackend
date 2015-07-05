@@ -10,6 +10,7 @@ import java.util.List;
 public class AppStartRequestBody {
     private long userId;
     private String deviceId;
+    private String regId;
     private Collection<Long> friendsIds;
     private List<Long> exceptionIds;
 
@@ -53,4 +54,15 @@ public class AppStartRequestBody {
     public void setExceptionIds(List<Long> exceptionIds) {
         this.exceptionIds = exceptionIds;
     }
+
+
+    public String getRegId() {
+        return regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
+    }
+
+
 }

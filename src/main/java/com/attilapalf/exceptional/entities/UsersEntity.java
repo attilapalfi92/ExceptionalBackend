@@ -1,7 +1,6 @@
 package com.attilapalf.exceptional.entities;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,6 +13,7 @@ public class UsersEntity {
 
     private long userId;
     private long userDbId;
+    private String gcmId;
     private Collection<DevicesEntity> devices;
 
     public UsersEntity() {
@@ -28,6 +28,15 @@ public class UsersEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Column(name = "gcm_id", columnDefinition = "VARCHAR(255)", nullable = false, insertable = true, updatable = true, unique = true)
+    public String getGcmId() {
+        return gcmId;
+    }
+
+    public void setGcmId(String gcmId) {
+        this.gcmId = gcmId;
     }
 
     @GeneratedValue
