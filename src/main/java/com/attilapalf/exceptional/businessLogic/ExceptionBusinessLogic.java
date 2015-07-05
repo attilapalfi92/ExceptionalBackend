@@ -35,12 +35,6 @@ public class ExceptionBusinessLogic {
     private final String apiKey = "AIzaSyCSwgwKHOuqBozM-JhhKYp6xnwFKs8xJrU";
     private final String projectNumber = "947608408958";
 
-    private final String marciRegId = "APA91bF2OrXis0QjTVffkhyb5SgZXY3-69XrvVx382fWFi77wDP8dxo" +
-            "J6UiOWK0fYKVtz8OiEFUb0XtmLtorslMuQz2UWrWunjqa5lYTLrSJ_dzV6QiaI2TLCFPyGkcb9gAm9rVv3yho";
-
-    private final String myRegId = "APA91bFNN4ofjf76nIc2uDuBif5HWXkmMdSzqBWwyK8E0HNBBGIpMEXZ96" +
-            "ANwyKai__68l5Yt5AwAqP8sqeE-actVzGqf6wCcvPy6DYg8D77Wb45sDo6I2N8x_4F2MF7SnkGEEP13JFO";
-
     @Transactional
     public ExceptionSentResponse sendException(ExceptionWrapper exceptionWrapper) {
 

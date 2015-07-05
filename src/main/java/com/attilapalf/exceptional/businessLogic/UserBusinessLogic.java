@@ -68,6 +68,7 @@ public class UserBusinessLogic {
         if (user == null) {
             // create and save it to database
             user = new UsersEntity();
+            user.setGcmId(requestBody.getRegId());
             user.setUserId(requestBody.getUserId());
             user = userCrud.save(user);
 
@@ -79,6 +80,7 @@ public class UserBusinessLogic {
         // if the user exists in the database
         else {
 
+            user.setGcmId(requestBody.getRegId());
             // refreshing the user's friendships
             refreshUsersFriendships(user, facebookFriends);
         }
