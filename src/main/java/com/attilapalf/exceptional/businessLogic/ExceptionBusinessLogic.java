@@ -1,12 +1,12 @@
 package com.attilapalf.exceptional.businessLogic;
 
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
+import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.repositories.ConstantCrud;
 import com.attilapalf.exceptional.repositories.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.U2ECrud;
 import com.attilapalf.exceptional.repositories.UserCrud;
-import com.attilapalf.exceptional.wrappers.ExceptionNotification;
-import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
-import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
+import com.attilapalf.exceptional.wrappers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.security.auth.RefreshFailedException;
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * Created by Attila on 2015-06-21.
@@ -23,11 +25,13 @@ import javax.transaction.Transactional;
 @Service
 public class ExceptionBusinessLogic {
     @Autowired
-    U2ECrud exceptionCrud;
+    private U2ECrud exceptionCrud;
     @Autowired
-    UserCrud userCrud;
+    private UserCrud userCrud;
     @Autowired
-    ExceptionTypeCrud exceptionTypeCrud;
+    private ExceptionTypeCrud exceptionTypeCrud;
+    @Autowired
+    private ConstantCrud constantCrud;
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -60,9 +64,20 @@ public class ExceptionBusinessLogic {
         // posting the data to recipient with gcm
         String gcmResponse = restTemplate.postForObject(url, requestData, String.class);
 
-
-        long toWho = exceptionWrapper.getToWho();
-
         return response;
+    }
+
+
+    @Transactional
+    public ExceptionRefreshResponse refreshExceptions(BaseRequestBody requestBody) {
+        UsersEntity user = userCrud.findOne(requestBody.getUserId());
+
+        List<Users2ExceptionsEntity> exceptions = exceptionCrud.findExceptionsNotAmongIds(
+                userCrud.getExceptionStartId(user),
+                (int) constantCrud.findOne(1).getConstantValueInt(),
+                requestBody.getExceptionIds()
+        );
+
+        return new ExceptionRefreshResponse(exceptions);
     }
 }

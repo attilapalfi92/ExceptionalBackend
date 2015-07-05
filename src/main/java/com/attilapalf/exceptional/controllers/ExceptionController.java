@@ -1,6 +1,8 @@
 package com.attilapalf.exceptional.controllers;
 
 import com.attilapalf.exceptional.businessLogic.ExceptionBusinessLogic;
+import com.attilapalf.exceptional.wrappers.BaseRequestBody;
+import com.attilapalf.exceptional.wrappers.ExceptionRefreshResponse;
 import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
 import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +28,11 @@ public class ExceptionController {
     public ResponseEntity<ExceptionSentResponse> sendException(@RequestBody ExceptionWrapper exceptionWrapper) {
 
         return new ResponseEntity<>(exceptionBusinessLogic.sendException(exceptionWrapper), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/exception/refresh", method = RequestMethod.POST)
+    public ResponseEntity<ExceptionRefreshResponse> refreshExceptions(@RequestBody BaseRequestBody requestBody) {
+
+        return new ResponseEntity<>(exceptionBusinessLogic.refreshExceptions(requestBody), HttpStatus.OK);
     }
 }

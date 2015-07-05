@@ -12,6 +12,13 @@
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="performance_schema"/>
     <schema name="" catalog="test"/>
+    <table name="constants" schema="" catalog="exceptional" type="TABLE">
+      <column name="constant_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="constant_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="constant_value_int" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="constant_value_string" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="constant_id"/>
+    </table>
     <table name="devices" schema="" catalog="exceptional" type="TABLE">
       <column name="device_id" sqlType="VARCHAR" precision="18" scale="0" nullable="false" jdbcType="12"/>
       <column name="user_id" sqlType="BIGINT UNSIGNED" precision="20" scale="0" nullable="true" jdbcType="-5"/>

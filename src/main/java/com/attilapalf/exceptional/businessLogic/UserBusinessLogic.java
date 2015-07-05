@@ -3,6 +3,7 @@ package com.attilapalf.exceptional.businessLogic;
 import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.repositories.ConstantCrud;
 import com.attilapalf.exceptional.repositories.DeviceCrud;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.repositories.U2ECrud;
@@ -28,14 +29,17 @@ public class UserBusinessLogic {
     private DeviceCrud deviceCrud;
     @Autowired
     private U2ECrud u2eCrud;
-
-    private final int maxExceptionsPerUser = 100000;
+    @Autowired
+    private ConstantCrud constantCrud;
 
 
     @Transactional
     public AppStartResponseBody appStart(AppStartRequestBody requestBody) {
         // TODO: by default on app start the user only gets the new exceptions since the last known from the client
         // TODO: if the user wants to refresh every exceptions, he has to pull down the list --> other method on backend
+
+        int maxExceptionsPerUser = (int) constantCrud.findOne(1).getConstantValueInt();
+
         if (requestBody.getExceptionIds().size() != 0) {
             long fromId = requestBody.getExceptionIds().get(0);
             long toId = (fromId % maxExceptionsPerUser) + maxExceptionsPerUser;
@@ -100,7 +104,7 @@ public class UserBusinessLogic {
         }
 
         responseBody.setMyExceptions(excWrappers);
-        responseBody.setExceptionIdStarter(user.getUserDbId() * maxExceptionsPerUser);
+        responseBody.setExceptionIdStarter(userCrud.getExceptionStartId(user));
 
         return responseBody;
     }

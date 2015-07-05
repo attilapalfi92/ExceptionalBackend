@@ -45,6 +45,22 @@ public class U2ECrudImpl implements U2ECrudCustom {
     }
 
     @Override
+    public List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long instanceStarterId, int maxExceptionsPerUser,
+                                                                  List<Long> knownIds) {
+        List<Users2ExceptionsEntity> result = em.createQuery(
+                "SELECT u2e FROM Users2ExceptionsEntity u2e " +
+                "WHERE u2e.u2EId > :idFrom AND u2e.u2EId < :idTo " +
+                "AND u2e.u2EId NOT IN :idList",
+                Users2ExceptionsEntity.class)
+                .setParameter("idFrom", instanceStarterId)
+                .setParameter("idTo", instanceStarterId + maxExceptionsPerUser)
+                .setParameter("idList", knownIds)
+                .getResultList();
+
+        return result;
+    }
+
+    @Override
     public Users2ExceptionsEntity saveNewException(ExceptionWrapper exceptionWrapper) {
         Users2ExceptionsEntity exception = new Users2ExceptionsEntity();
         exception.setCreationDate(new Timestamp(exceptionWrapper.getTimeInMillis()));

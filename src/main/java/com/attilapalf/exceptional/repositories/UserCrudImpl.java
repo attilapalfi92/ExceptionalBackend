@@ -2,6 +2,7 @@ package com.attilapalf.exceptional.repositories;
 
 import com.attilapalf.exceptional.entities.FriendsEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +15,9 @@ import java.util.HashSet;
 public class UserCrudImpl implements UserCrudCustom {
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    ConstantCrud constantCrud;
 
     public Collection<FriendsEntity> findMyFriends(UsersEntity user) {
         return em.createQuery("SELECT f FROM FriendsEntity f WHERE " +
@@ -91,5 +95,32 @@ public class UserCrudImpl implements UserCrudCustom {
         }
 
         return new HashSet<>();
+    }
+
+
+    /**
+     * Calculates the min value of exception instance ids for this user
+     * @param userId
+     * @return
+     */
+    @Override
+    public long getExceptionStartId(long userId) {
+        int maxExceptionsPerUser = (int) constantCrud.findOne(1).getConstantValueInt();
+
+        UsersEntity user = em.createQuery("SELECT u FROM UsersEntity u " +
+                "WHERE u.userId = :userId", UsersEntity.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
+
+
+        return user.getUserDbId() * maxExceptionsPerUser;
+    }
+
+    @Override
+    public long getExceptionStartId(UsersEntity user) {
+        int maxExceptionsPerUser = (int) constantCrud.findOne(1).getConstantValueInt();
+
+        return user.getUserDbId() * maxExceptionsPerUser;
     }
 }
