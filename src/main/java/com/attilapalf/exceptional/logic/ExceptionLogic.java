@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.businessLogic;
+package com.attilapalf.exceptional.logic;
 
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
@@ -7,6 +7,7 @@ import com.attilapalf.exceptional.repositories.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.U2ECrud;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.wrappers.*;
+import com.attilapalf.exceptional.wrappers.notifications.ExceptionNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.security.auth.RefreshFailedException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Service
-public class ExceptionBusinessLogic {
+public class ExceptionLogic {
     @Autowired
     private U2ECrud exceptionCrud;
     @Autowired
@@ -32,8 +32,6 @@ public class ExceptionBusinessLogic {
     private ExceptionTypeCrud exceptionTypeCrud;
     @Autowired
     private ConstantCrud constantCrud;
-
-    RestTemplate restTemplate = new RestTemplate();
 
     private final String url = "https://android.googleapis.com/gcm/send";
     private final String apiKey = "AIzaSyCSwgwKHOuqBozM-JhhKYp6xnwFKs8xJrU";
@@ -59,7 +57,7 @@ public class ExceptionBusinessLogic {
 
         HttpEntity<ExceptionNotification> requestData = new HttpEntity<>(exceptionNotification, headers);
 
-        restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
 
         // posting the data to recipient with gcm
         String gcmResponse = restTemplate.postForObject(url, requestData, String.class);
@@ -69,7 +67,7 @@ public class ExceptionBusinessLogic {
 
 
     @Transactional
-    public ExceptionRefreshResponse refreshExceptions(BaseRequestBody requestBody) {
+    public ExceptionRefreshResponse refreshExceptions(BaseExceptionRequestBody requestBody) {
         UsersEntity user = userCrud.findOne(requestBody.getUserId());
 
         List<Users2ExceptionsEntity> exceptions = exceptionCrud.findExceptionsNotAmongIds(

@@ -1,9 +1,9 @@
-package com.attilapalf.exceptional.wrappers;
+package com.attilapalf.exceptional.wrappers.notifications;
 
 /**
  * Created by 212461305 on 2015.07.04..
  */
-public abstract class MessageData {
+public abstract class BaseMessageData {
     protected String notificationType;
 
     public String getNotificationType() {

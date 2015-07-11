@@ -1,13 +1,10 @@
 package com.attilapalf.exceptional.controllers;
 
-import com.attilapalf.exceptional.businessLogic.ExceptionBusinessLogic;
-import com.attilapalf.exceptional.businessLogic.UserBusinessLogic;
+import com.attilapalf.exceptional.logic.UserLogic;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
 import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
-import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
-import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +23,7 @@ public class UserController {
     private UserCrud userCrud;
 
     @Autowired
-    private UserBusinessLogic userBusinessLogic;
+    private UserLogic userLogic;
 
     // TODO: if the user wants to refresh all his friends, we will need a handler for this
 
@@ -46,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/user/firstAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> userFirstAppStart(@RequestBody AppStartRequestBody requestBody) {
         try {
-            AppStartResponseBody response = userBusinessLogic.firstAppStart(requestBody);
+            AppStartResponseBody response = userLogic.firstAppStart(requestBody);
             ResponseEntity<AppStartResponseBody> result = new ResponseEntity<>(response, HttpStatus.OK);
             return result;
         } catch (Throwable t) {
@@ -58,7 +55,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/appStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> userAppStart(@RequestBody AppStartRequestBody requestBody) {
-        return new ResponseEntity<>(userBusinessLogic.appStart(requestBody), HttpStatus.OK);
+        return new ResponseEntity<>(userLogic.appStart(requestBody), HttpStatus.OK);
     }
 
 }

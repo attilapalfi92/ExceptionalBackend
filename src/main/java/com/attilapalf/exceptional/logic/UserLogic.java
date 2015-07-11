@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.businessLogic;
+package com.attilapalf.exceptional.logic;
 
 import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
@@ -7,11 +7,17 @@ import com.attilapalf.exceptional.repositories.ConstantCrud;
 import com.attilapalf.exceptional.repositories.DeviceCrud;
 import com.attilapalf.exceptional.repositories.UserCrud;
 import com.attilapalf.exceptional.repositories.U2ECrud;
+import com.attilapalf.exceptional.wrappers.notifications.ExceptionNotification;
 import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
 import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
 import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
+import com.attilapalf.exceptional.wrappers.notifications.FriendNotification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -21,7 +27,7 @@ import java.util.*;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Service
-public class UserBusinessLogic {
+public class UserLogic {
 
     @Autowired
     private UserCrud userCrud;
@@ -31,6 +37,10 @@ public class UserBusinessLogic {
     private U2ECrud u2eCrud;
     @Autowired
     private ConstantCrud constantCrud;
+
+    private final String url = "https://android.googleapis.com/gcm/send";
+    private final String apiKey = "AIzaSyCSwgwKHOuqBozM-JhhKYp6xnwFKs8xJrU";
+    private final String projectNumber = "947608408958";
 
 
     @Transactional
@@ -104,7 +114,6 @@ public class UserBusinessLogic {
         }
 
         responseBody.setMyExceptions(excWrappers);
-        responseBody.setExceptionIdStarter(userCrud.getExceptionStartId(user));
 
         return responseBody;
     }
@@ -152,7 +161,24 @@ public class UserBusinessLogic {
         userCrud.saveFriendships(user, userFriends);
 
         // TODO: notify friends about new user friend!
+        List<String> friendRegIds = new ArrayList<>(userFriends.size());
+        for (UsersEntity friend : userFriends) {
+            friendRegIds.add(friend.getGcmId());
+        }
+        FriendNotification notification = new FriendNotification(user.getUserId(), friendRegIds);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "key=" + apiKey);
+
+        HttpEntity<FriendNotification> requestData = new HttpEntity<>(notification, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // posting the data to recipient with gcm
+        String gcmResponse = restTemplate.postForObject(url, requestData, String.class);
+        int i = 0;
+        i = i + 1;
     }
 
 

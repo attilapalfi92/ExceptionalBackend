@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.wrappers;
+package com.attilapalf.exceptional.wrappers.notifications;
 
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 
@@ -8,12 +8,9 @@ import java.util.List;
 /**
  * Created by 212461305 on 2015.07.04..
  */
-public class ExceptionNotification {
+public class ExceptionNotification extends BaseNotification {
 
-    private List<String> registration_ids;
     private Data data;
-    private Notification notification;
-
 
     public ExceptionNotification (String toRegId, Users2ExceptionsEntity exception) {
         registration_ids = new ArrayList<>();
@@ -27,42 +24,12 @@ public class ExceptionNotification {
         data.setTimeInMillis(exception.getCreationDate().getTime());
         data.setLongitude(exception.getLongitude());
         data.setLatitude(exception.getLatitude());
-
-        notification = new Notification("New exception!", "You have received a(n) " +
-                exception.getExceptionType().getShortName());
     }
 
 
-    public static class Notification {
-        private String title;
-        private String body;
 
-        public Notification() {
-        }
 
-        public Notification(String title, String body) {
-            this.title = title;
-            this.body = body;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getBody() {
-            return body;
-        }
-
-        public void setBody(String body) {
-            this.body = body;
-        }
-    }
-
-    public static class Data { //extends MessageData {
+    public static class Data extends BaseMessageData {
 
         private int typeId;
         private long instanceId;
@@ -71,7 +38,10 @@ public class ExceptionNotification {
         private long timeInMillis;
         private long fromWho;
         private long toWho;
-        private final String notificationType = "exception";
+
+        public Data() {
+            notificationType = "exception";
+        }
 
         public int getTypeId() {
             return typeId;
@@ -149,13 +119,5 @@ public class ExceptionNotification {
 
     public void setData(Data data) {
         this.data = data;
-    }
-
-    public Notification getNotification() {
-        return notification;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
     }
 }

@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.controllers;
 
-import com.attilapalf.exceptional.businessLogic.ExceptionBusinessLogic;
-import com.attilapalf.exceptional.wrappers.BaseRequestBody;
+import com.attilapalf.exceptional.logic.ExceptionLogic;
+import com.attilapalf.exceptional.wrappers.BaseExceptionRequestBody;
 import com.attilapalf.exceptional.wrappers.ExceptionRefreshResponse;
 import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
 import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
@@ -22,17 +22,17 @@ public class ExceptionController {
     // TODO: if the user wants to refresh all his exceptions, we will need a handler for this
 
     @Autowired
-    ExceptionBusinessLogic exceptionBusinessLogic;
+    ExceptionLogic exceptionLogic;
 
     @RequestMapping(value = "/exception", method = RequestMethod.POST)
     public ResponseEntity<ExceptionSentResponse> sendException(@RequestBody ExceptionWrapper exceptionWrapper) {
 
-        return new ResponseEntity<>(exceptionBusinessLogic.sendException(exceptionWrapper), HttpStatus.OK);
+        return new ResponseEntity<>(exceptionLogic.sendException(exceptionWrapper), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/exception/refresh", method = RequestMethod.POST)
-    public ResponseEntity<ExceptionRefreshResponse> refreshExceptions(@RequestBody BaseRequestBody requestBody) {
+    public ResponseEntity<ExceptionRefreshResponse> refreshExceptions(@RequestBody BaseExceptionRequestBody requestBody) {
 
-        return new ResponseEntity<>(exceptionBusinessLogic.refreshExceptions(requestBody), HttpStatus.OK);
+        return new ResponseEntity<>(exceptionLogic.refreshExceptions(requestBody), HttpStatus.OK);
     }
 }

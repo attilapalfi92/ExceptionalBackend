@@ -48,6 +48,9 @@ public class U2ECrudImpl implements U2ECrudCustom {
 
     @Override
     public List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long userDbId, List<Long> knownIds, int maxExceptionsPerUser) {
+        if (knownIds.isEmpty()) {
+            knownIds.add((long) 0);
+        }
 
         long idFrom = userDbId * maxExceptionsPerUser;
         List<Users2ExceptionsEntity> result = em.createQuery(
