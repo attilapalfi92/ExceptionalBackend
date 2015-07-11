@@ -16,8 +16,7 @@ public interface U2ECrudCustom {
 
     List<Users2ExceptionsEntity> findExceptionsBetweenIds(long idFrom, long idTo);
 
-    List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long instanceStarterId, int maxExceptionsPerUser,
-                                                           List<Long> knownIds);
+    List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long userDbId, List<Long> knownIds, int maxExceptionsPerUser);
 
     Users2ExceptionsEntity saveNewException(ExceptionWrapper exceptionWrapper);
 }

@@ -73,9 +73,9 @@ public class ExceptionBusinessLogic {
         UsersEntity user = userCrud.findOne(requestBody.getUserId());
 
         List<Users2ExceptionsEntity> exceptions = exceptionCrud.findExceptionsNotAmongIds(
-                userCrud.getExceptionStartId(user),
-                (int) constantCrud.findOne(1).getConstantValueInt(),
-                requestBody.getExceptionIds()
+                user.getUserDbId(),
+                requestBody.getExceptionIds(),
+                constantCrud.findMaxExceptionsPerUser()
         );
 
         return new ExceptionRefreshResponse(exceptions);

@@ -4,6 +4,7 @@ import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
 import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,7 @@ public class U2ECrudImpl implements U2ECrudCustom {
 
     @PersistenceContext
     EntityManager em;
+
 
     @Override
     public Collection<Users2ExceptionsEntity> findExceptionsByUser(UsersEntity user) {
@@ -45,15 +47,16 @@ public class U2ECrudImpl implements U2ECrudCustom {
     }
 
     @Override
-    public List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long instanceStarterId, int maxExceptionsPerUser,
-                                                                  List<Long> knownIds) {
+    public List<Users2ExceptionsEntity> findExceptionsNotAmongIds(long userDbId, List<Long> knownIds, int maxExceptionsPerUser) {
+
+        long idFrom = userDbId * maxExceptionsPerUser;
         List<Users2ExceptionsEntity> result = em.createQuery(
                 "SELECT u2e FROM Users2ExceptionsEntity u2e " +
                 "WHERE u2e.u2EId > :idFrom AND u2e.u2EId < :idTo " +
                 "AND u2e.u2EId NOT IN :idList",
                 Users2ExceptionsEntity.class)
-                .setParameter("idFrom", instanceStarterId)
-                .setParameter("idTo", instanceStarterId + maxExceptionsPerUser)
+                .setParameter("idFrom", idFrom)
+                .setParameter("idTo", idFrom + maxExceptionsPerUser)
                 .setParameter("idList", knownIds)
                 .getResultList();
 
