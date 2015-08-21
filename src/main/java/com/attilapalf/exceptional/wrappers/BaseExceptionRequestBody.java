@@ -1,18 +1,19 @@
 package com.attilapalf.exceptional.wrappers;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
  * Created by 212461305 on 2015.07.05..
  */
 public class BaseExceptionRequestBody extends BaseRequestBody {
-    protected List<Long> exceptionIds;
+    protected List<BigInteger> knownExceptionIds;
 
-    public List<Long> getExceptionIds() {
-        return exceptionIds;
+    public List<BigInteger> getKnownExceptionIds() {
+        return knownExceptionIds;
     }
 
-    public void setExceptionIds(List<Long> exceptionIds) {
-        this.exceptionIds = exceptionIds;
+    public void setKnownExceptionIds(List<BigInteger> knownExceptionIds) {
+        this.knownExceptionIds = knownExceptionIds;
     }
 }

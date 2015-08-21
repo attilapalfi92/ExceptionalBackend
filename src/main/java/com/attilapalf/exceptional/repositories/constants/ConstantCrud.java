@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.repositories;
+package com.attilapalf.exceptional.repositories.constants;
 
 import com.attilapalf.exceptional.entities.ConstantsEntity;
 import org.springframework.data.repository.CrudRepository;

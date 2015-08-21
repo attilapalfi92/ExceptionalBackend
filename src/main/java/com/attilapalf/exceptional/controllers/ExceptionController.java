@@ -4,7 +4,7 @@ import com.attilapalf.exceptional.logic.ExceptionLogic;
 import com.attilapalf.exceptional.wrappers.BaseExceptionRequestBody;
 import com.attilapalf.exceptional.wrappers.ExceptionRefreshResponse;
 import com.attilapalf.exceptional.wrappers.ExceptionSentResponse;
-import com.attilapalf.exceptional.wrappers.ExceptionWrapper;
+import com.attilapalf.exceptional.wrappers.ExceptionInstanceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RestController
 public class ExceptionController {
-    // TODO: if the user wants to refresh all his exceptions, we will need a handler for this
 
     @Autowired
     ExceptionLogic exceptionLogic;
 
     @RequestMapping(value = "/exception", method = RequestMethod.POST)
-    public ResponseEntity<ExceptionSentResponse> sendException(@RequestBody ExceptionWrapper exceptionWrapper) {
+    public ResponseEntity<ExceptionSentResponse> sendException(@RequestBody ExceptionInstanceWrapper exceptionInstanceWrapper) {
 
-        return new ResponseEntity<>(exceptionLogic.sendException(exceptionWrapper), HttpStatus.OK);
+        return new ResponseEntity<>(exceptionLogic.sendException(exceptionInstanceWrapper), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/exception/refresh", method = RequestMethod.POST)

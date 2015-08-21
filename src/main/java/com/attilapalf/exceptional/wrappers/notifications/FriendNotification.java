@@ -1,5 +1,6 @@
 package com.attilapalf.exceptional.wrappers.notifications;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ public class FriendNotification extends BaseNotification {
 
     private Data data;
 
-    public FriendNotification(long friendId, List<String> regIds) {
+    public FriendNotification(BigInteger friendId, List<String> regIds) {
         data = new Data(friendId);
         registration_ids = regIds;
     }
@@ -23,18 +24,18 @@ public class FriendNotification extends BaseNotification {
     }
 
     private static class Data extends BaseMessageData {
-        private long friendId;
+        private BigInteger friendId;
 
-        public Data(long friendId) {
+        public Data(BigInteger friendId) {
             this.friendId = friendId;
             notificationType = "friend";
         }
 
-        public long getFriendId() {
+        public BigInteger getFriendId() {
             return friendId;
         }
 
-        public void setFriendId(long friendId) {
+        public void setFriendId(BigInteger friendId) {
             this.friendId = friendId;
         }
     }

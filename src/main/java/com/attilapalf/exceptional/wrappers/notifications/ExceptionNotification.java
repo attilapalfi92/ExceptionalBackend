@@ -1,7 +1,8 @@
 package com.attilapalf.exceptional.wrappers.notifications;
 
-import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
+import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +13,16 @@ public class ExceptionNotification extends BaseNotification {
 
     private Data data;
 
-    public ExceptionNotification (String toRegId, Users2ExceptionsEntity exception) {
+    public ExceptionNotification (String toGcmRegId, ExceptionInstancesEntity exception) {
         registration_ids = new ArrayList<>();
-        registration_ids.add(toRegId);
+        registration_ids.add(toGcmRegId);
 
         data = new Data();
-        data.setTypeId(exception.getExceptionType().getTypeId());
-        data.setInstanceId(exception.getU2EId());
-        data.setFromWho(exception.getFromUser().getUserId());
-        data.setToWho(exception.getToUser().getUserId());
-        data.setTimeInMillis(exception.getCreationDate().getTime());
+        data.setTypeId(exception.getType().getId());
+        data.setInstanceId(exception.getId());
+        data.setFromWho(exception.getFromUser().getFacebookId());
+        data.setToWho(exception.getToUser().getFacebookId());
+        data.setTimeInMillis(exception.getDateTime().getTime());
         data.setLongitude(exception.getLongitude());
         data.setLatitude(exception.getLatitude());
     }
@@ -32,12 +33,12 @@ public class ExceptionNotification extends BaseNotification {
     public static class Data extends BaseMessageData {
 
         private int typeId;
-        private long instanceId;
+        private BigInteger instanceId;
         private double longitude;
         private double latitude;
         private long timeInMillis;
-        private long fromWho;
-        private long toWho;
+        private BigInteger fromWho;
+        private BigInteger toWho;
 
         public Data() {
             notificationType = "exception";
@@ -51,11 +52,11 @@ public class ExceptionNotification extends BaseNotification {
             this.typeId = typeId;
         }
 
-        public long getInstanceId() {
+        public BigInteger getInstanceId() {
             return instanceId;
         }
 
-        public void setInstanceId(long instanceId) {
+        public void setInstanceId(BigInteger instanceId) {
             this.instanceId = instanceId;
         }
 
@@ -83,19 +84,19 @@ public class ExceptionNotification extends BaseNotification {
             this.timeInMillis = timeInMillis;
         }
 
-        public long getFromWho() {
+        public BigInteger getFromWho() {
             return fromWho;
         }
 
-        public void setFromWho(long fromWho) {
+        public void setFromWho(BigInteger fromWho) {
             this.fromWho = fromWho;
         }
 
-        public long getToWho() {
+        public BigInteger getToWho() {
             return toWho;
         }
 
-        public void setToWho(long toWho) {
+        public void setToWho(BigInteger toWho) {
             this.toWho = toWho;
         }
 

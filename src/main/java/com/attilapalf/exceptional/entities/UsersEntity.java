@@ -1,52 +1,76 @@
 package com.attilapalf.exceptional.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.math.BigInteger;
+import java.util.List;
 
 /**
- * Created by Attila on 2015-06-10.
+ * Created by palfi on 2015-08-20.
  */
 @Entity
 @Table(name = "users", schema = "", catalog = "exceptional")
 public class UsersEntity {
-
-    private long userId;
-    private long userDbId;
-    private String gcmId;
-    private Collection<DevicesEntity> devices;
-
-    public UsersEntity() {
-        devices = new ArrayList<>();
-    }
+    private BigInteger dbId;
+    private BigInteger facebookId;
+    private int points;
+    private String firstName;
+    private String lastName;
+    private List<DevicesEntity> devices;
+    private BeingVotedExceptionTypeEntity votedForException;
+    private List<ExceptionTypesEntity> MyWinnerExceptions;
+    private List<ExceptionInstancesEntity> sentByMe;
+    private List<ExceptionInstancesEntity> sentToMe;
+    private BeingVotedExceptionTypeEntity MySubmissionForVote;
 
     @Id
-    @Column(name = "user_id", columnDefinition = "BIGINT(255)", nullable = false, insertable = true, updatable = true)
-    public long getUserId() {
-        return userId;
+    @Column(name = "facebook_id", columnDefinition = "BIGINT(255)")
+    public BigInteger getFacebookId() {
+        return facebookId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setFacebookId(BigInteger facebookId) {
+        this.facebookId = facebookId;
     }
 
-    @Column(name = "gcm_id", columnDefinition = "VARCHAR(255)", nullable = false, insertable = true, updatable = true, unique = true)
-    public String getGcmId() {
-        return gcmId;
-    }
-
-    public void setGcmId(String gcmId) {
-        this.gcmId = gcmId;
-    }
-
+    @Basic
     @GeneratedValue
-    @Column(name = "user_db_id", columnDefinition = "BIGINT(255)", nullable = false, updatable = true, insertable = false, unique = true)
-    public long getUserDbId() {
-        return userDbId;
+    @Column(name = "db_id", columnDefinition = "BIGINT(255)")
+    public BigInteger getDbId() {
+        return dbId;
     }
 
-    public void setUserDbId(long userDbId) {
-        this.userDbId = userDbId;
+    public void setDbId(BigInteger dbId) {
+        this.dbId = dbId;
+    }
+
+    @Basic
+    @Column(name = "points")
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    @Basic
+    @Column(name = "first_name")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Basic
+    @Column(name = "last_name")
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
@@ -56,32 +80,77 @@ public class UsersEntity {
 
         UsersEntity that = (UsersEntity) o;
 
-        if (userId != that.userId) return false;
+        if (points != that.points) return false;
+        if (dbId != null ? !dbId.equals(that.dbId) : that.dbId != null) return false;
+        if (facebookId != null ? !facebookId.equals(that.facebookId) : that.facebookId != null) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
 
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = dbId != null ? dbId.hashCode() : 0;
+        result = 31 * result + (facebookId != null ? facebookId.hashCode() : 0);
+        result = 31 * result + points;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        return result;
+    }
+
     @OneToMany(mappedBy = "user")
-    public Collection<DevicesEntity> getDevices() {
+    public List<DevicesEntity> getDevices() {
         return devices;
     }
 
-    public void setDevices(Collection<DevicesEntity> devicesesByUserId) {
-        this.devices = devicesesByUserId;
+    public void setDevices(List<DevicesEntity> devices) {
+        this.devices = devices;
     }
 
-
-    public boolean hasDevice(String deviceId) {
-        for (DevicesEntity d : devices) {
-            if (d.getDeviceId().equals(deviceId)) {
-                return true;
-            }
-        }
-
-        return false;
+    @ManyToOne
+    @JoinColumn(name = "voted_for_exception", referencedColumnName = "id")
+    public BeingVotedExceptionTypeEntity getVotedForException() {
+        return votedForException;
     }
 
-    public void addDevice(DevicesEntity device) {
-        devices.add(device);
+    public void setVotedForException(BeingVotedExceptionTypeEntity votedForException) {
+        this.votedForException = votedForException;
+    }
+
+    @OneToMany(mappedBy = "submittedBy")
+    public List<ExceptionTypesEntity> getMyWinnerExceptions() {
+        return MyWinnerExceptions;
+    }
+
+    public void setMyWinnerExceptions(List<ExceptionTypesEntity> myWinnerExceptions) {
+        MyWinnerExceptions = myWinnerExceptions;
+    }
+
+    @OneToMany(mappedBy = "fromUser")
+    public List<ExceptionInstancesEntity> getSentByMe() {
+        return sentByMe;
+    }
+
+    public void setSentByMe(List<ExceptionInstancesEntity> sentByMe) {
+        this.sentByMe = sentByMe;
+    }
+
+    @OneToMany(mappedBy = "toUser")
+    public List<ExceptionInstancesEntity> getSentToMe() {
+        return sentToMe;
+    }
+
+    public void setSentToMe(List<ExceptionInstancesEntity> sentToMe) {
+        this.sentToMe = sentToMe;
+    }
+
+    @OneToOne(mappedBy = "submittedBy")
+    public BeingVotedExceptionTypeEntity getMySubmissionForVote() {
+        return MySubmissionForVote;
+    }
+
+    public void setMySubmissionForVote(BeingVotedExceptionTypeEntity mySubmissionForVote) {
+        MySubmissionForVote = mySubmissionForVote;
     }
 }

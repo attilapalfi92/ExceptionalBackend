@@ -1,22 +1,20 @@
 package com.attilapalf.exceptional.entities;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by palfi on 2015-08-20.
  */
 @Entity
-@Table(name = "exception_types", schema = "", catalog = "exceptional")
-public class ExceptionTypesEntity {
+@Table(name = "being_voted_exception_type", schema = "", catalog = "exceptional")
+public class BeingVotedExceptionTypeEntity {
     private int id;
     private String shortName;
     private String prefix;
     private String description;
+    private int votes;
     private int version;
-    private String type;
     private UsersEntity submittedBy;
-    private List<ExceptionInstancesEntity> instances;
 
     @Id
     @GeneratedValue
@@ -60,6 +58,16 @@ public class ExceptionTypesEntity {
     }
 
     @Basic
+    @Column(name = "votes")
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
+
+    @Basic
     @Column(name = "version")
     public int getVersion() {
         return version;
@@ -69,29 +77,18 @@ public class ExceptionTypesEntity {
         this.version = version;
     }
 
-    @Basic
-    @Column(name = "type", columnDefinition = "ENUM('JAVA','.NET','SWIFT','SUBMITTED')")
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ExceptionTypesEntity that = (ExceptionTypesEntity) o;
+        BeingVotedExceptionTypeEntity that = (BeingVotedExceptionTypeEntity) o;
 
         if (id != that.id) return false;
-        if (version != that.version) return false;
+        if (votes != that.votes) return false;
         if (shortName != null ? !shortName.equals(that.shortName) : that.shortName != null) return false;
         if (prefix != null ? !prefix.equals(that.prefix) : that.prefix != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
 
         return true;
     }
@@ -102,27 +99,17 @@ public class ExceptionTypesEntity {
         result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
         result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + version;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + votes;
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "submitted_by_fb_id", referencedColumnName = "facebook_id")
+    @OneToOne
+    @JoinColumn(name = "submitted_by_fb_id", referencedColumnName = "facebook_id", nullable = false)
     public UsersEntity getSubmittedBy() {
         return submittedBy;
     }
 
     public void setSubmittedBy(UsersEntity submittedBy) {
         this.submittedBy = submittedBy;
-    }
-
-    @OneToMany(mappedBy = "type")
-    public List<ExceptionInstancesEntity> getInstances() {
-        return instances;
-    }
-
-    public void setInstances(List<ExceptionInstancesEntity> instances) {
-        this.instances = instances;
     }
 }

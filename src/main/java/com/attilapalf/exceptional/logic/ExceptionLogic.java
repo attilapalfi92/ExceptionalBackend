@@ -1,22 +1,14 @@
 package com.attilapalf.exceptional.logic;
 
-import com.attilapalf.exceptional.entities.Users2ExceptionsEntity;
-import com.attilapalf.exceptional.entities.UsersEntity;
-import com.attilapalf.exceptional.repositories.ConstantCrud;
-import com.attilapalf.exceptional.repositories.ExceptionTypeCrud;
-import com.attilapalf.exceptional.repositories.U2ECrud;
-import com.attilapalf.exceptional.repositories.UserCrud;
+import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
+import com.attilapalf.exceptional.repositories.exceptiontypes.ExceptionTypeCrud;
+import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud;
+import com.attilapalf.exceptional.repositories.users.UserCrud;
 import com.attilapalf.exceptional.wrappers.*;
-import com.attilapalf.exceptional.wrappers.notifications.ExceptionNotification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 /**
  * Created by Attila on 2015-06-21.
@@ -25,7 +17,7 @@ import java.util.List;
 @Service
 public class ExceptionLogic {
     @Autowired
-    private U2ECrud exceptionCrud;
+    private ExceptionInstanceCrud exceptionCrud;
     @Autowired
     private UserCrud userCrud;
     @Autowired
@@ -38,44 +30,46 @@ public class ExceptionLogic {
     private final String projectNumber = "947608408958";
 
     @Transactional
-    public ExceptionSentResponse sendException(ExceptionWrapper exceptionWrapper) {
+    public ExceptionSentResponse sendException(ExceptionInstanceWrapper exceptionInstanceWrapper) {
 
-        // storing the exception
-        Users2ExceptionsEntity exception = exceptionCrud.saveNewException(exceptionWrapper);
-        ExceptionSentResponse response = new ExceptionSentResponse(exceptionWrapper.getToWho(),
-                exception.getExceptionType().getShortName());
-
-        // getting the regId of the recipient
-        String regId = userCrud.findOne(exceptionWrapper.getToWho()).getGcmId();
-
-        // TODO: send push notif to recipient
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "key=" + apiKey);
-
-        ExceptionNotification exceptionNotification = new ExceptionNotification(regId, exception);
-
-        HttpEntity<ExceptionNotification> requestData = new HttpEntity<>(exceptionNotification, headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        // posting the data to recipient with gcm
-        String gcmResponse = restTemplate.postForObject(url, requestData, String.class);
-
-        return response;
+//        // storing the exception
+//        ExceptionInstancesEntity exception = exceptionCrud.saveNewException(exceptionInstanceWrapper);
+//        ExceptionSentResponse response = new ExceptionSentResponse(exceptionInstanceWrapper.getToWho(),
+//                exception.getType().getShortName());
+//
+//        // getting the regId of the recipient
+//        String regId = userCrud.findOne(exceptionInstanceWrapper.getToWho()).getGcmId();
+//
+//        // TODO: send push notif to recipient
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.set("Authorization", "key=" + apiKey);
+//
+//        ExceptionNotification exceptionNotification = new ExceptionNotification(regId, exception);
+//
+//        HttpEntity<ExceptionNotification> requestData = new HttpEntity<>(exceptionNotification, headers);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        // posting the data to recipient with gcm
+//        String gcmResponse = restTemplate.postForObject(url, requestData, String.class);
+//
+//        return response;
+        return new ExceptionSentResponse();
     }
 
 
     @Transactional
     public ExceptionRefreshResponse refreshExceptions(BaseExceptionRequestBody requestBody) {
-        UsersEntity user = userCrud.findOne(requestBody.getUserId());
-
-        List<Users2ExceptionsEntity> exceptions = exceptionCrud.findExceptionsNotAmongIds(
-                user.getUserDbId(),
-                requestBody.getExceptionIds(),
-                constantCrud.findMaxExceptionsPerUser()
-        );
-
-        return new ExceptionRefreshResponse(exceptions);
+//        UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
+//
+//        List<ExceptionInstancesEntity> exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
+//                user.getDatabaseId(),
+//                requestBody.getKnownExceptionIds(),
+//                constantCrud.getMaxExceptionsPerUser()
+//        );
+//
+//        return new ExceptionRefreshResponse(exceptions);
+        return new ExceptionRefreshResponse();
     }
 }

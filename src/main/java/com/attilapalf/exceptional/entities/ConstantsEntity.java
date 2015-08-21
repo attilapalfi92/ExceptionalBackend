@@ -1,30 +1,32 @@
 package com.attilapalf.exceptional.entities;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 /**
- * Created by 212461305 on 2015.07.05..
+ * Created by palfi on 2015-08-20.
  */
 @Entity
 @Table(name = "constants", schema = "", catalog = "exceptional")
 public class ConstantsEntity {
-    private int constantId;
+    private int id;
     private String constantName;
-    private long constantValueInt;
-    private String constantValueString;
+    private BigInteger intValue;
+    private String stringValue;
 
     @Id
-    @Column(name = "constant_id")
-    public int getConstantId() {
-        return constantId;
+    @GeneratedValue
+    @Column(name = "id")
+    public int getId() {
+        return id;
     }
 
-    public void setConstantId(int constantId) {
-        this.constantId = constantId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Basic
-    @Column(name = "constant_name", columnDefinition = "VARCHAR(45)")
+    @Column(name = "constant_name")
     public String getConstantName() {
         return constantName;
     }
@@ -34,23 +36,23 @@ public class ConstantsEntity {
     }
 
     @Basic
-    @Column(name = "constant_value_int", columnDefinition = "BIGINT(255)")
-    public long getConstantValueInt() {
-        return constantValueInt;
+    @Column(name = "int_value", columnDefinition = "BIGINT(255)")
+    public BigInteger getIntValue() {
+        return intValue;
     }
 
-    public void setConstantValueInt(long constantValueInt) {
-        this.constantValueInt = constantValueInt;
+    public void setIntValue(BigInteger intValue) {
+        this.intValue = intValue;
     }
 
     @Basic
-    @Column(name = "constant_value_string", columnDefinition = "VARCHAR(200)")
-    public String getConstantValueString() {
-        return constantValueString;
+    @Column(name = "string_value")
+    public String getStringValue() {
+        return stringValue;
     }
 
-    public void setConstantValueString(String constantValueString) {
-        this.constantValueString = constantValueString;
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
     }
 
     @Override
@@ -60,21 +62,20 @@ public class ConstantsEntity {
 
         ConstantsEntity that = (ConstantsEntity) o;
 
-        if (constantId != that.constantId) return false;
+        if (id != that.id) return false;
         if (constantName != null ? !constantName.equals(that.constantName) : that.constantName != null) return false;
-        if (constantValueInt != that.constantValueInt) return false;
-        if (constantValueString != null ? !constantValueString.equals(that.constantValueString) : that.constantValueString != null)
-            return false;
+        if (intValue != null ? !intValue.equals(that.intValue) : that.intValue != null) return false;
+        if (stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = constantId;
+        int result = id;
         result = 31 * result + (constantName != null ? constantName.hashCode() : 0);
-        result = 31 * result + (int) constantValueInt;
-        result = 31 * result + (constantValueString != null ? constantValueString.hashCode() : 0);
+        result = 31 * result + (intValue != null ? intValue.hashCode() : 0);
+        result = 31 * result + (stringValue != null ? stringValue.hashCode() : 0);
         return result;
     }
 }
