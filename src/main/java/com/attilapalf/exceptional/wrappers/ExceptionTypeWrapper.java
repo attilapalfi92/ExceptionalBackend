@@ -38,8 +38,10 @@ public class ExceptionTypeWrapper {
         prefix = exceptionTypesEntity.getPrefix();
         description = exceptionTypesEntity.getDescription();
         type = exceptionTypesEntity.getType();
-        submitter = new Submitter(exceptionTypesEntity.getSubmittedBy().getFirstName(),
-                exceptionTypesEntity.getSubmittedBy().getLastName());
+        if (exceptionTypesEntity.getSubmittedBy() != null) {
+            submitter = new Submitter(exceptionTypesEntity.getSubmittedBy().getFirstName(),
+                    exceptionTypesEntity.getSubmittedBy().getLastName());
+        }
     }
 
     public ExceptionTypeWrapper(BeingVotedExceptionTypeEntity exception) {
