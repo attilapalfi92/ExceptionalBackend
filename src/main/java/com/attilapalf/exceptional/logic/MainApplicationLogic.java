@@ -104,8 +104,7 @@ public class MainApplicationLogic {
     private AppStartResponseBody createResponseForFirstAppStart(UsersEntity user) {
         AppStartResponseBody responseBody = initResponseWithExceptions(user);
         addExceptionTypesToResponse(responseBody);
-        addVotedExceptionsToResponse(responseBody);
-        responseBody.setPoints(user.getPoints());
+        addCommonDataToResponse(user, responseBody);
         return responseBody;
     }
 
@@ -129,6 +128,13 @@ public class MainApplicationLogic {
                 typeWrapperList.add(new ExceptionTypeWrapper(exceptionType)));
         responseBody.setExceptionTypes(typeWrapperList);
         responseBody.setExceptionVersion(constantCrud.getExceptionVersion());
+    }
+
+    private void addCommonDataToResponse(UsersEntity user, AppStartResponseBody responseBody) {
+        addVotedExceptionsToResponse(responseBody);
+        responseBody.setPoints(user.getPoints());
+        List<UsersEntity> friends = friendshipCrud.findUsersExistingFriends(user);
+        responseBody.setFriendsPoints(friends.stream().collect(Collectors.toMap(UsersEntity::getFacebookId, UsersEntity::getPoints)));
     }
 
     private void addVotedExceptionsToResponse(AppStartResponseBody responseBody) {
@@ -166,8 +172,7 @@ public class MainApplicationLogic {
     private AppStartResponseBody createResponseForRegularAppStart(AppStartRequestBody requestBody, UsersEntity user) {
         AppStartResponseBody responseBody = initResponseWithFreshExceptions(requestBody, user);
         addFreshExceptionTypesToResponse(requestBody, responseBody);
-        addVotedExceptionsToResponse(responseBody);
-        responseBody.setPoints(user.getPoints());
+        addCommonDataToResponse(user, responseBody);
         return responseBody;
     }
 
