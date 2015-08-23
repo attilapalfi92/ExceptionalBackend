@@ -19,6 +19,7 @@ public class ExceptionInstancesEntity {
     private ExceptionTypesEntity type;
 
     @Id
+    @GeneratedValue
     @Column(name = "id", columnDefinition = "BIGINT(255)")
     public BigInteger getId() {
         return id;

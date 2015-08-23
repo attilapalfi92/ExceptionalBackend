@@ -4,6 +4,8 @@ import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,10 +15,8 @@ public class ExceptionNotification extends BaseNotification {
 
     private Data data;
 
-    public ExceptionNotification (String toGcmRegId, ExceptionInstancesEntity exception) {
-        registration_ids = new ArrayList<>();
-        registration_ids.add(toGcmRegId);
-
+    public ExceptionNotification(List<String> toGcmIds, ExceptionInstancesEntity exception, int points) {
+        registration_ids = toGcmIds;
         data = new Data();
         data.setTypeId(exception.getType().getId());
         data.setInstanceId(exception.getId());
@@ -25,7 +25,10 @@ public class ExceptionNotification extends BaseNotification {
         data.setTimeInMillis(exception.getDateTime().getTime());
         data.setLongitude(exception.getLongitude());
         data.setLatitude(exception.getLatitude());
+        data.setPoints(points);
     }
+
+
 
 
 
@@ -39,6 +42,7 @@ public class ExceptionNotification extends BaseNotification {
         private long timeInMillis;
         private BigInteger fromWho;
         private BigInteger toWho;
+        private int points;
 
         public Data() {
             notificationType = "exception";
@@ -100,9 +104,16 @@ public class ExceptionNotification extends BaseNotification {
             this.toWho = toWho;
         }
 
-
         public String getNotificationType() {
             return notificationType;
+        }
+
+        public int getPoints() {
+            return points;
+        }
+
+        public void setPoints(int points) {
+            this.points = points;
         }
     }
 

@@ -24,9 +24,9 @@ public class ExceptionController {
     ExceptionLogic exceptionLogic;
 
     @RequestMapping(value = "/exception", method = RequestMethod.POST)
-    public ResponseEntity<ExceptionSentResponse> sendException(@RequestBody ExceptionInstanceWrapper exceptionInstanceWrapper) {
+    public ResponseEntity<ExceptionSentResponse> throwException(@RequestBody ExceptionInstanceWrapper exceptionInstanceWrapper) {
 
-        return new ResponseEntity<>(exceptionLogic.sendException(exceptionInstanceWrapper), HttpStatus.OK);
+        return new ResponseEntity<>(exceptionLogic.throwException(exceptionInstanceWrapper), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/exception/refresh", method = RequestMethod.POST)
