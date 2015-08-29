@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.controllers;
 
-import com.attilapalf.exceptional.logic.MainApplicationLogic;
+import com.attilapalf.exceptional.services.MainApplicationService;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
 import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
@@ -25,7 +25,7 @@ public class MainApplicationController {
     private UserCrud userCrud;
 
     @Autowired
-    private MainApplicationLogic mainApplicationLogic;
+    private MainApplicationService mainApplicationService;
 
 
     @RequestMapping(value = "/user/byPage/{page}/{size}", method = RequestMethod.GET)
@@ -43,7 +43,7 @@ public class MainApplicationController {
     @RequestMapping(value = "/application/firstAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> firstAppStart(@RequestBody AppStartRequestBody requestBody) {
         try {
-            AppStartResponseBody response = mainApplicationLogic.firstAppStart(requestBody);
+            AppStartResponseBody response = mainApplicationService.firstAppStart(requestBody);
             ResponseEntity<AppStartResponseBody> result = new ResponseEntity<>(response, HttpStatus.OK);
             return result;
         } catch (Throwable t) {
@@ -55,7 +55,7 @@ public class MainApplicationController {
 
     @RequestMapping(value = "/application/regularAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponseBody> regularAppStart(@RequestBody AppStartRequestBody requestBody) {
-        return new ResponseEntity<>(mainApplicationLogic.regularAppStart(requestBody), HttpStatus.OK);
+        return new ResponseEntity<>(mainApplicationService.regularAppStart(requestBody), HttpStatus.OK);
     }
 
 }

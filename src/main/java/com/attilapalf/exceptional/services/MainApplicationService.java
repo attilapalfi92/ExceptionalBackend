@@ -1,23 +1,26 @@
-package com.attilapalf.exceptional.logic;
+package com.attilapalf.exceptional.services;
 
 import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
-import com.attilapalf.exceptional.repositories.beingvotedexceptiontypes.BeingVotedCrud;
+import com.attilapalf.exceptional.repositories.being_voted_exception_types.BeingVotedCrud;
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
 import com.attilapalf.exceptional.repositories.devices.DeviceCrud;
 import com.attilapalf.exceptional.repositories.exceptiontypes.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.friendships.FriendshipCrud;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
-import com.attilapalf.exceptional.wrappers.ExceptionInstanceWrapper;
-import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
-import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
-import com.attilapalf.exceptional.wrappers.ExceptionTypeWrapper;
+import com.attilapalf.exceptional.wrappers.*;
+import com.attilapalf.exceptional.wrappers.notifications.FriendNotification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.*;
@@ -28,8 +31,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Service
-public class MainApplicationLogic {
-
+public class MainApplicationService {
     @Autowired
     private UserCrud userCrud;
     @Autowired
@@ -44,19 +46,19 @@ public class MainApplicationLogic {
     private ExceptionTypeCrud exceptionTypeCrud;
     @Autowired
     private BeingVotedCrud beingVotedCrud;
-
-    private final String url = "https://android.googleapis.com/gcm/send";
-    private final String apiKey = "AIzaSyCSwgwKHOuqBozM-JhhKYp6xnwFKs8xJrU";
-    private final String projectNumber = "947608408958";
+    @Autowired
+    private GcmMessageService gcmMessageService;
 
     @Transactional
     public AppStartResponseBody firstAppStart(AppStartRequestBody requestBody) {
         UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
+        boolean newUser = false;
         if (user == null) {
+            newUser = true;
             user = saveNewUser(requestBody);
         }
         updateUserName(requestBody, user);
-        return handleExistingUserFirstStart(requestBody, user);
+        return handleUserFirstStart(requestBody, user, newUser);
     }
 
     @Transactional
@@ -81,10 +83,13 @@ public class MainApplicationLogic {
         return userCrud.save(user);
     }
 
-    private AppStartResponseBody handleExistingUserFirstStart(AppStartRequestBody requestBody, UsersEntity user) {
+    private AppStartResponseBody handleUserFirstStart(AppStartRequestBody requestBody, UsersEntity user, boolean newUser) {
         saveDeviceForUser(requestBody, user);
         removeInvalidFriendships(requestBody, user);
-        saveNewFriends(requestBody, user);
+        List<UsersEntity> friends = saveNewFriends(requestBody, user);
+        if (newUser) {
+            gcmMessageService.sendFriendNotification(user, friends);
+        }
         return createResponseForFirstAppStart(user);
     }
 
@@ -95,10 +100,10 @@ public class MainApplicationLogic {
         friendshipCrud.deleteFriendships(user, existingFriendIds);
     }
 
-    private void saveNewFriends(AppStartRequestBody requestBody, UsersEntity user) {
+    private List<UsersEntity> saveNewFriends(AppStartRequestBody requestBody, UsersEntity user) {
         List<BigInteger> currentValidFriendIds = requestBody.getFriendsFacebookIds();
         userCrud.saveUsersIfNew(currentValidFriendIds);
-        saveNewFriendships(user, currentValidFriendIds);
+        return saveNewFriendships(user, currentValidFriendIds);
     }
 
     private AppStartResponseBody createResponseForFirstAppStart(UsersEntity user) {
@@ -108,11 +113,12 @@ public class MainApplicationLogic {
         return responseBody;
     }
 
-    private void saveNewFriendships(UsersEntity user, List<BigInteger> currentValidFriendIds) {
+    private List<UsersEntity> saveNewFriendships(UsersEntity user, List<BigInteger> currentValidFriendIds) {
         List<UsersEntity> existingFriends = friendshipCrud.findUsersExistingFriends(user);
         List<BigInteger> existingFriendIds = existingFriends.stream().map(UsersEntity::getFacebookId).collect(Collectors.toList());
         currentValidFriendIds.removeAll(existingFriendIds);
         friendshipCrud.saveFriendships(user, userCrud.userIdsToUsersEntities(currentValidFriendIds));
+        return existingFriends;
     }
 
     private AppStartResponseBody initResponseWithExceptions(UsersEntity user) {

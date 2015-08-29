@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.repositories.beingvotedexceptiontypes;
+package com.attilapalf.exceptional.repositories.being_voted_exception_types;
 
 import com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity;
 import org.springframework.data.repository.CrudRepository;

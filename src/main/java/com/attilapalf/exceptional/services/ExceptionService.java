@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.logic;
+package com.attilapalf.exceptional.services;
 
 import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -27,11 +26,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Service
-public class ExceptionLogic {
-    private final String URL = "https://android.googleapis.com/gcm/send";
-    private final String API_KEY = "AIzaSyCSwgwKHOuqBozM-JhhKYp6xnwFKs8xJrU";
-    private final String PROJECT_NUMBER = "947608408958";
-
+public class ExceptionService {
     @Autowired
     private ExceptionInstanceCrud exceptionCrud;
     @Autowired
@@ -40,16 +35,9 @@ public class ExceptionLogic {
     private ExceptionTypeCrud exceptionTypeCrud;
     @Autowired
     private ConstantCrud constantCrud;
+    @Autowired
+    private GcmMessageService gcmMessageService;
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private HttpHeaders httpHeaders;
-
-    @PostConstruct
-    public void initHttpHeaders() {
-        httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set("Authorization", "key=" + API_KEY);
-    }
 
     @Transactional
     public ExceptionSentResponse throwException(ExceptionInstanceWrapper exceptionInstanceWrapper) {
@@ -57,22 +45,15 @@ public class ExceptionLogic {
         UsersEntity receiver = userCrud.findOne(exceptionInstanceWrapper.getToWho());
         updateUsersPoints(sender, receiver);
         ExceptionInstancesEntity exception = exceptionCrud.saveNewException(exceptionInstanceWrapper);
-        sendPushNotification(receiver, exception);
+        gcmMessageService.sendExceptionNotification(receiver, exception);
         return createExceptionSentResponse(exceptionInstanceWrapper, sender, exception);
     }
 
     private void updateUsersPoints(UsersEntity sender, UsersEntity receiver) {
-        sender.setPoints(sender.getPoints() + 20);
-        receiver.setPoints(receiver.getPoints() - 25);
+        sender.setPoints(sender.getPoints() + 25);
+        receiver.setPoints(receiver.getPoints() - 20);
         userCrud.save(sender);
         userCrud.save(receiver);
-    }
-
-    private void sendPushNotification(UsersEntity receiver, ExceptionInstancesEntity exception) {
-        List<String> receiverGcmIds = receiver.getDevices().stream().map(DevicesEntity::getGcmId).collect(Collectors.toList());
-        ExceptionNotification notification = new ExceptionNotification(receiverGcmIds, exception, receiver.getPoints());
-        HttpEntity<ExceptionNotification> gcmRequestData = new HttpEntity<>(notification, httpHeaders);
-        String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);
     }
 
     private ExceptionSentResponse createExceptionSentResponse(ExceptionInstanceWrapper exceptionInstanceWrapper, UsersEntity sender, ExceptionInstancesEntity exception) {
