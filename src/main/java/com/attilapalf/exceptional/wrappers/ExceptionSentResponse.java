@@ -6,40 +6,51 @@ import java.math.BigInteger;
  * Created by Attila on 2015-06-21.
  */
 public class ExceptionSentResponse {
-    private BigInteger toWho;
-    private String shortName;
-    private int points;
+    private String exceptionShortName;
+    private int yourPoints;
+    private int friendsPoints;
+    private ExceptionInstanceWrapper instanceWrapper;
 
     public ExceptionSentResponse() {
     }
 
-    public ExceptionSentResponse(BigInteger toWho, String shortName, int points) {
-        this.toWho = toWho;
-        this.shortName = shortName;
-        this.points = points;
+    public ExceptionSentResponse(ExceptionInstanceWrapper instanceWrapper,
+                                 String exceptionShortName, int yourPoints, int friendsPoints) {
+        this.instanceWrapper = instanceWrapper;
+        this.exceptionShortName = exceptionShortName;
+        this.yourPoints = yourPoints;
+        this.friendsPoints = friendsPoints;
     }
 
-    public BigInteger getToWho() {
-        return toWho;
+    public String getExceptionShortName() {
+        return exceptionShortName;
     }
 
-    public void setToWho(BigInteger toWho) {
-        this.toWho = toWho;
+    public void setExceptionShortName(String exceptionShortName) {
+        this.exceptionShortName = exceptionShortName;
     }
 
-    public String getShortName() {
-        return shortName;
+    public int getYourPoints() {
+        return yourPoints;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setYourPoints(int yourPoints) {
+        this.yourPoints = yourPoints;
     }
 
-    public int getPoints() {
-        return points;
+    public int getFriendsPoints() {
+        return friendsPoints;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setFriendsPoints(int friendsPoints) {
+        this.friendsPoints = friendsPoints;
+    }
+
+    public ExceptionInstanceWrapper getInstanceWrapper() {
+        return instanceWrapper;
+    }
+
+    public void setInstanceWrapper(ExceptionInstanceWrapper instanceWrapper) {
+        this.instanceWrapper = instanceWrapper;
     }
 }

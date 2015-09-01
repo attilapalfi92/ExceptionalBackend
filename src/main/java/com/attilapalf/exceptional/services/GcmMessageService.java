@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -42,7 +43,11 @@ public class GcmMessageService {
         List<String> receiverGcmIds = getGcmIds(receiver);
         ExceptionNotification notification = new ExceptionNotification(receiverGcmIds, exception, receiver.getPoints());
         HttpEntity<ExceptionNotification> gcmRequestData = new HttpEntity<>(notification, httpHeaders);
-        String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);
+        try {
+            String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
     }
 
     private void pushNewFriendNotification(UsersEntity receiver, UsersEntity newUser) {
@@ -52,7 +57,11 @@ public class GcmMessageService {
                 newUser.getFirstName().trim() + " " + newUser.getLastName().trim(),
                 receiverGcmIds);
         HttpEntity<FriendNotification> gcmRequestData = new HttpEntity<>(notification, httpHeaders);
-        String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);
+        try {
+            String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<String> getGcmIds(UsersEntity receiver) {

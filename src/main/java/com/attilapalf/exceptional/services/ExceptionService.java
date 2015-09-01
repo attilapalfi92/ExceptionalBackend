@@ -45,8 +45,9 @@ public class ExceptionService {
         UsersEntity receiver = userCrud.findOne(exceptionInstanceWrapper.getToWho());
         updateUsersPoints(sender, receiver);
         ExceptionInstancesEntity exception = exceptionCrud.saveNewException(exceptionInstanceWrapper);
+        exceptionInstanceWrapper.setInstanceId(exception.getId());
         gcmMessageService.sendExceptionNotification(receiver, exception);
-        return createExceptionSentResponse(exceptionInstanceWrapper, sender, exception);
+        return createExceptionSentResponse(sender, receiver, exceptionInstanceWrapper, exception);
     }
 
     private void updateUsersPoints(UsersEntity sender, UsersEntity receiver) {
@@ -56,11 +57,14 @@ public class ExceptionService {
         userCrud.save(receiver);
     }
 
-    private ExceptionSentResponse createExceptionSentResponse(ExceptionInstanceWrapper exceptionInstanceWrapper, UsersEntity sender, ExceptionInstancesEntity exception) {
+    private ExceptionSentResponse createExceptionSentResponse(UsersEntity sender, UsersEntity receiver,
+                                                              ExceptionInstanceWrapper instanceWrapper,
+                                                              ExceptionInstancesEntity exception) {
         return new ExceptionSentResponse(
-                exceptionInstanceWrapper.getToWho(),
+                instanceWrapper,
                 exception.getType().getShortName(),
-                sender.getPoints());
+                sender.getPoints(),
+                receiver.getPoints());
     }
 
     @Transactional
