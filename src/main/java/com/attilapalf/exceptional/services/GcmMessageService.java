@@ -39,9 +39,9 @@ public class GcmMessageService {
         friends.forEach(friend -> pushNewFriendNotification(friend, newUser));
     }
 
-    public void sendExceptionNotification(UsersEntity receiver, ExceptionInstancesEntity exception) {
+    public void sendExceptionNotification(UsersEntity receiver, UsersEntity sender, ExceptionInstancesEntity exception) {
         List<String> receiverGcmIds = getGcmIds(receiver);
-        ExceptionNotification notification = new ExceptionNotification(receiverGcmIds, exception, receiver.getPoints());
+        ExceptionNotification notification = new ExceptionNotification(receiverGcmIds, exception, receiver.getPoints(), sender.getPoints());
         HttpEntity<ExceptionNotification> gcmRequestData = new HttpEntity<>(notification, httpHeaders);
         try {
             String gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String.class);

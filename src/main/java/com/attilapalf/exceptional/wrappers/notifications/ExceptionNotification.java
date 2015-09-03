@@ -3,9 +3,6 @@ package com.attilapalf.exceptional.wrappers.notifications;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +12,7 @@ public class ExceptionNotification extends BaseNotification {
 
     private Data data;
 
-    public ExceptionNotification(List<String> toGcmIds, ExceptionInstancesEntity exception, int points) {
+    public ExceptionNotification(List<String> toGcmIds, ExceptionInstancesEntity exception, int yourPoints, int friendPoints) {
         registration_ids = toGcmIds;
         data = new Data();
         data.setTypeId(exception.getType().getId());
@@ -25,7 +22,8 @@ public class ExceptionNotification extends BaseNotification {
         data.setTimeInMillis(exception.getDateTime().getTime());
         data.setLongitude(exception.getLongitude());
         data.setLatitude(exception.getLatitude());
-        data.setPoints(points);
+        data.setYourPoints(yourPoints);
+        data.setFriendPoints(friendPoints);
     }
 
 
@@ -34,7 +32,6 @@ public class ExceptionNotification extends BaseNotification {
 
 
     public static class Data extends BaseMessageData {
-
         private int typeId;
         private BigInteger instanceId;
         private double longitude;
@@ -42,7 +39,8 @@ public class ExceptionNotification extends BaseNotification {
         private long timeInMillis;
         private BigInteger fromWho;
         private BigInteger toWho;
-        private int points;
+        private int yourPoints;
+        private int friendPoints;
 
         public Data() {
             notificationType = "exception";
@@ -108,12 +106,20 @@ public class ExceptionNotification extends BaseNotification {
             return notificationType;
         }
 
-        public int getPoints() {
-            return points;
+        public int getYourPoints() {
+            return yourPoints;
         }
 
-        public void setPoints(int points) {
-            this.points = points;
+        public void setYourPoints(int yourPoints) {
+            this.yourPoints = yourPoints;
+        }
+
+        public int getFriendPoints() {
+            return friendPoints;
+        }
+
+        public void setFriendPoints(int friendPoints) {
+            this.friendPoints = friendPoints;
         }
     }
 

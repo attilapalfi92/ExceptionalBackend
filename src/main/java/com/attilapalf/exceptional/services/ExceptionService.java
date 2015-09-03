@@ -46,7 +46,7 @@ public class ExceptionService {
         updateUsersPoints(sender, receiver);
         ExceptionInstancesEntity exception = exceptionCrud.saveNewException(exceptionInstanceWrapper);
         exceptionInstanceWrapper.setInstanceId(exception.getId());
-        gcmMessageService.sendExceptionNotification(receiver, exception);
+        gcmMessageService.sendExceptionNotification(receiver, sender, exception);
         return createExceptionSentResponse(sender, receiver, exceptionInstanceWrapper, exception);
     }
 
