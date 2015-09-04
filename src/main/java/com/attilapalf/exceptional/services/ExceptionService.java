@@ -69,15 +69,13 @@ public class ExceptionService {
 
     @Transactional
     public ExceptionRefreshResponse refreshExceptions(BaseExceptionRequestBody requestBody) {
-//        UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
-//
-//        List<ExceptionInstancesEntity> exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
-//                user.getDatabaseId(),
-//                requestBody.getKnownExceptionIds(),
-//                constantCrud.getMaxExceptionsPerUser()
-//        );
-//
-//        return new ExceptionRefreshResponse(exceptions);
-        return new ExceptionRefreshResponse();
+        UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
+
+        List<ExceptionInstancesEntity> exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
+                user,
+                requestBody.getKnownExceptionIds()
+        );
+
+        return new ExceptionRefreshResponse(exceptions);
     }
 }
