@@ -4,7 +4,7 @@ import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
-import com.attilapalf.exceptional.wrappers.ExceptionInstanceWrapper;
+import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;

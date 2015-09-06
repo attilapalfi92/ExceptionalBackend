@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.wrappers.notifications;
+package com.attilapalf.exceptional.messages.notifications;
 
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 

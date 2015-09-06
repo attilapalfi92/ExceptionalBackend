@@ -2,7 +2,7 @@ package com.attilapalf.exceptional.repositories.exceptioninstances_;
 
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
-import com.attilapalf.exceptional.wrappers.ExceptionInstanceWrapper;
+import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 
 import java.math.BigInteger;
 import java.util.List;

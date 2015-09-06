@@ -1,6 +1,4 @@
-package com.attilapalf.exceptional.wrappers;
-
-import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
+package com.attilapalf.exceptional.messages;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -11,15 +9,17 @@ import java.util.Map;
 /**
  * Created by Attila on 2015-06-11.
  */
-public class AppStartResponseBody {
+public class AppStartResponse {
     private List<ExceptionInstanceWrapper> myExceptions;
     private List<ExceptionTypeWrapper> exceptionTypes;
     private List<ExceptionTypeWrapper> beingVotedTypes;
     private Map<BigInteger, Integer> friendsPoints;
     private int points;
     private int exceptionVersion;
+    private boolean submittedThisWeek = false;
+    private boolean votedThisWeek = false;
 
-    public AppStartResponseBody() {
+    public AppStartResponse() {
         myExceptions = new ArrayList<>();
         exceptionTypes = new ArrayList<>();
         beingVotedTypes = new ArrayList<>();
@@ -72,5 +72,21 @@ public class AppStartResponseBody {
 
     public void setFriendsPoints(Map<BigInteger, Integer> friendsPoints) {
         this.friendsPoints = friendsPoints;
+    }
+
+    public boolean isSubmittedThisWeek() {
+        return submittedThisWeek;
+    }
+
+    public void setSubmittedThisWeek(boolean submittedThisWeek) {
+        this.submittedThisWeek = submittedThisWeek;
+    }
+
+    public boolean isVotedThisWeek() {
+        return votedThisWeek;
+    }
+
+    public void setVotedThisWeek(boolean votedThisWeek) {
+        this.votedThisWeek = votedThisWeek;
     }
 }

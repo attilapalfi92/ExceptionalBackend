@@ -3,8 +3,8 @@ package com.attilapalf.exceptional.controllers;
 import com.attilapalf.exceptional.services.MainApplicationService;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
-import com.attilapalf.exceptional.wrappers.AppStartRequestBody;
-import com.attilapalf.exceptional.wrappers.AppStartResponseBody;
+import com.attilapalf.exceptional.messages.AppStartRequest;
+import com.attilapalf.exceptional.messages.AppStartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,10 +41,10 @@ public class MainApplicationController {
 
 
     @RequestMapping(value = "/application/firstAppStart", method = RequestMethod.POST)
-    public ResponseEntity<AppStartResponseBody> firstAppStart(@RequestBody AppStartRequestBody requestBody) {
+    public ResponseEntity<AppStartResponse> firstAppStart(@RequestBody AppStartRequest requestBody) {
         try {
-            AppStartResponseBody response = mainApplicationService.firstAppStart(requestBody);
-            ResponseEntity<AppStartResponseBody> result = new ResponseEntity<>(response, HttpStatus.OK);
+            AppStartResponse response = mainApplicationService.firstAppStart(requestBody);
+            ResponseEntity<AppStartResponse> result = new ResponseEntity<>(response, HttpStatus.OK);
             return result;
         } catch (Throwable t) {
             t.printStackTrace();
@@ -54,7 +54,7 @@ public class MainApplicationController {
 
 
     @RequestMapping(value = "/application/regularAppStart", method = RequestMethod.POST)
-    public ResponseEntity<AppStartResponseBody> regularAppStart(@RequestBody AppStartRequestBody requestBody) {
+    public ResponseEntity<AppStartResponse> regularAppStart(@RequestBody AppStartRequest requestBody) {
         return new ResponseEntity<>(mainApplicationService.regularAppStart(requestBody), HttpStatus.OK);
     }
 

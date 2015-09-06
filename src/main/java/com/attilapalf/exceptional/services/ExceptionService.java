@@ -1,25 +1,17 @@
 package com.attilapalf.exceptional.services;
 
-import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
 import com.attilapalf.exceptional.repositories.exceptiontypes.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
-import com.attilapalf.exceptional.wrappers.*;
-import com.attilapalf.exceptional.wrappers.notifications.ExceptionNotification;
+import com.attilapalf.exceptional.messages.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Attila on 2015-06-21.
@@ -68,14 +60,12 @@ public class ExceptionService {
     }
 
     @Transactional
-    public ExceptionRefreshResponse refreshExceptions(BaseExceptionRequestBody requestBody) {
+    public ExceptionRefreshResponse refreshExceptions(BaseExceptionRequest requestBody) {
         UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
-
         List<ExceptionInstancesEntity> exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
                 user,
                 requestBody.getKnownExceptionIds()
         );
-
         return new ExceptionRefreshResponse(exceptions);
     }
 }

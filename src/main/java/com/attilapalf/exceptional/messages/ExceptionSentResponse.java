@@ -1,6 +1,4 @@
-package com.attilapalf.exceptional.wrappers;
-
-import java.math.BigInteger;
+package com.attilapalf.exceptional.messages;
 
 /**
  * Created by Attila on 2015-06-21.

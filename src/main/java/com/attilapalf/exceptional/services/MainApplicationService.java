@@ -11,16 +11,10 @@ import com.attilapalf.exceptional.repositories.devices.DeviceCrud;
 import com.attilapalf.exceptional.repositories.exceptiontypes.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.friendships.FriendshipCrud;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
-import com.attilapalf.exceptional.wrappers.*;
-import com.attilapalf.exceptional.wrappers.notifications.FriendNotification;
+import com.attilapalf.exceptional.messages.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.*;
@@ -50,7 +44,7 @@ public class MainApplicationService {
     private GcmMessageService gcmMessageService;
 
     @Transactional
-    public AppStartResponseBody firstAppStart(AppStartRequestBody requestBody) {
+    public AppStartResponse firstAppStart(AppStartRequest requestBody) {
         UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
         boolean newUser = false;
         if (user == null) {
@@ -62,7 +56,7 @@ public class MainApplicationService {
     }
 
     @Transactional
-    public AppStartResponseBody regularAppStart(AppStartRequestBody requestBody) {
+    public AppStartResponse regularAppStart(AppStartRequest requestBody) {
         UsersEntity user = userCrud.findOne(requestBody.getUserFacebookId());
         updateUserName(requestBody, user);
         removeInvalidFriendships(requestBody, user);
@@ -70,20 +64,20 @@ public class MainApplicationService {
         return createResponseForRegularAppStart(requestBody, user);
     }
 
-    private UsersEntity saveNewUser(AppStartRequestBody requestBody) {
+    private UsersEntity saveNewUser(AppStartRequest requestBody) {
         UsersEntity user = new UsersEntity();
         user.setFacebookId(requestBody.getUserFacebookId());
         user.setPoints(constantCrud.getStartingPoint());
         return updateUserName(requestBody, user);
     }
 
-    private UsersEntity updateUserName(AppStartRequestBody requestBody, UsersEntity user) {
+    private UsersEntity updateUserName(AppStartRequest requestBody, UsersEntity user) {
         user.setFirstName(requestBody.getFirstName());
         user.setLastName(requestBody.getLastName());
         return userCrud.save(user);
     }
 
-    private AppStartResponseBody handleUserFirstStart(AppStartRequestBody requestBody, UsersEntity user, boolean newUser) {
+    private AppStartResponse handleUserFirstStart(AppStartRequest requestBody, UsersEntity user, boolean newUser) {
         saveDeviceForUser(requestBody, user);
         removeInvalidFriendships(requestBody, user);
         List<UsersEntity> friends = saveNewFriends(requestBody, user);
@@ -93,21 +87,21 @@ public class MainApplicationService {
         return createResponseForFirstAppStart(user);
     }
 
-    private void removeInvalidFriendships(AppStartRequestBody requestBody, UsersEntity user) {
+    private void removeInvalidFriendships(AppStartRequest requestBody, UsersEntity user) {
         List<UsersEntity> existingFriends = friendshipCrud.findUsersExistingFriends(user);
         List<BigInteger> existingFriendIds = existingFriends.stream().map(UsersEntity::getFacebookId).collect(Collectors.toList());
         existingFriendIds.removeAll(requestBody.getFriendsFacebookIds());
         friendshipCrud.deleteFriendships(user, existingFriendIds);
     }
 
-    private List<UsersEntity> saveNewFriends(AppStartRequestBody requestBody, UsersEntity user) {
+    private List<UsersEntity> saveNewFriends(AppStartRequest requestBody, UsersEntity user) {
         List<BigInteger> currentValidFriendIds = requestBody.getFriendsFacebookIds();
         userCrud.saveUsersIfNew(currentValidFriendIds);
         return saveNewFriendships(user, currentValidFriendIds);
     }
 
-    private AppStartResponseBody createResponseForFirstAppStart(UsersEntity user) {
-        AppStartResponseBody responseBody = initResponseWithExceptions(user);
+    private AppStartResponse createResponseForFirstAppStart(UsersEntity user) {
+        AppStartResponse responseBody = initResponseWithExceptions(user);
         addExceptionTypesToResponse(responseBody);
         addCommonDataToResponse(user, responseBody);
         return responseBody;
@@ -121,14 +115,14 @@ public class MainApplicationService {
         return existingFriends;
     }
 
-    private AppStartResponseBody initResponseWithExceptions(UsersEntity user) {
+    private AppStartResponse initResponseWithExceptions(UsersEntity user) {
         List<ExceptionInstancesEntity> exceptions = exceptionInstanceCrud.findLastExceptionsForUser(user);
-        AppStartResponseBody responseBody = new AppStartResponseBody();
+        AppStartResponse responseBody = new AppStartResponse();
         responseBody.setMyExceptions(exceptions.stream().map(ExceptionInstanceWrapper::new).collect(Collectors.toList()));
         return responseBody;
     }
 
-    private void addExceptionTypesToResponse(AppStartResponseBody responseBody) {
+    private void addExceptionTypesToResponse(AppStartResponse responseBody) {
         List<ExceptionTypeWrapper> typeWrapperList = new ArrayList<>();
         exceptionTypeCrud.findAll().forEach(exceptionType ->
                 typeWrapperList.add(new ExceptionTypeWrapper(exceptionType)));
@@ -136,21 +130,27 @@ public class MainApplicationService {
         responseBody.setExceptionVersion(constantCrud.getExceptionVersion());
     }
 
-    private void addCommonDataToResponse(UsersEntity user, AppStartResponseBody responseBody) {
+    private void addCommonDataToResponse(UsersEntity user, AppStartResponse responseBody) {
         addVotedExceptionsToResponse(responseBody);
+        addVoteMetadataToResponse(user, responseBody);
         responseBody.setPoints(user.getPoints());
         List<UsersEntity> friends = friendshipCrud.findUsersExistingFriends(user);
         responseBody.setFriendsPoints(friends.stream().collect(Collectors.toMap(UsersEntity::getFacebookId, UsersEntity::getPoints)));
     }
 
-    private void addVotedExceptionsToResponse(AppStartResponseBody responseBody) {
+    private void addVoteMetadataToResponse(UsersEntity user, AppStartResponse responseBody) {
+        responseBody.setVotedThisWeek( user.getVotedForException() != null ? true : false );
+        responseBody.setSubmittedThisWeek( user.getMySubmissionForVote() != null ? true : false );
+    }
+
+    private void addVotedExceptionsToResponse(AppStartResponse responseBody) {
         List<ExceptionTypeWrapper> typeWrapperList = new ArrayList<>();
         beingVotedCrud.findAll().forEach(exception ->
                 typeWrapperList.add(new ExceptionTypeWrapper(exception)));
         responseBody.setBeingVotedTypes(typeWrapperList);
     }
 
-    private void saveDeviceForUser(AppStartRequestBody requestBody, UsersEntity user) {
+    private void saveDeviceForUser(AppStartRequest requestBody, UsersEntity user) {
         DevicesEntity device = deviceCrud.findOne(requestBody.getDeviceId());
         if (device == null) {
             device = saveNewDevice(requestBody, user);
@@ -158,7 +158,7 @@ public class MainApplicationService {
         saveUserWithDevice(user, device);
     }
 
-    private DevicesEntity saveNewDevice(AppStartRequestBody requestBody, UsersEntity user) {
+    private DevicesEntity saveNewDevice(AppStartRequest requestBody, UsersEntity user) {
         DevicesEntity device = new DevicesEntity();
         device.setDeviceId(requestBody.getDeviceId());
         device.setUser(user);
@@ -175,22 +175,22 @@ public class MainApplicationService {
         userCrud.save(user);
     }
 
-    private AppStartResponseBody createResponseForRegularAppStart(AppStartRequestBody requestBody, UsersEntity user) {
-        AppStartResponseBody responseBody = initResponseWithFreshExceptions(requestBody, user);
+    private AppStartResponse createResponseForRegularAppStart(AppStartRequest requestBody, UsersEntity user) {
+        AppStartResponse responseBody = initResponseWithFreshExceptions(requestBody, user);
         addFreshExceptionTypesToResponse(requestBody, responseBody);
         addCommonDataToResponse(user, responseBody);
         return responseBody;
     }
 
-    private AppStartResponseBody initResponseWithFreshExceptions(AppStartRequestBody requestBody, UsersEntity user) {
+    private AppStartResponse initResponseWithFreshExceptions(AppStartRequest requestBody, UsersEntity user) {
         List<ExceptionInstancesEntity> exceptions = exceptionInstanceCrud
                 .findLastExceptionsNotAmongIds(user, requestBody.getKnownExceptionIds());
-        AppStartResponseBody response = new AppStartResponseBody();
+        AppStartResponse response = new AppStartResponse();
         response.setMyExceptions(exceptions.stream().map(ExceptionInstanceWrapper::new).collect(Collectors.toList()));
         return response;
     }
 
-    private void addFreshExceptionTypesToResponse(AppStartRequestBody requestBody, AppStartResponseBody responseBody) {
+    private void addFreshExceptionTypesToResponse(AppStartRequest requestBody, AppStartResponse responseBody) {
         int knownVersion = requestBody.getExceptionVersion();
         int currentVersion = constantCrud.getExceptionVersion();
         if (currentVersion > knownVersion) {

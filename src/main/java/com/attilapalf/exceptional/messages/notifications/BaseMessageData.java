@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.wrappers.notifications;
+package com.attilapalf.exceptional.messages.notifications;
 
 /**
  * Created by 212461305 on 2015.07.04..

@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.wrappers;
+package com.attilapalf.exceptional.messages;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Attila on 2015-06-11.
  */
-public class AppStartRequestBody extends BaseExceptionRequestBody {
+public class AppStartRequest extends BaseExceptionRequest {
     private String deviceId;
     private String gcmId;
     private List<BigInteger> friendsFacebookIds;
@@ -14,18 +14,18 @@ public class AppStartRequestBody extends BaseExceptionRequestBody {
     private String firstName, lastName;
     private String deviceName;
 
-    public AppStartRequestBody() {
+    public AppStartRequest() {
     }
 
-    public AppStartRequestBody(String deviceId, BigInteger userId,
-                               List<BigInteger> friendsFacebookIds, List<BigInteger> exceptionIds) {
+    public AppStartRequest(String deviceId, BigInteger userId,
+                           List<BigInteger> friendsFacebookIds, List<BigInteger> exceptionIds) {
         this.deviceId = deviceId;
         this.userFacebookId = userId;
         this.friendsFacebookIds = friendsFacebookIds;
         this.knownExceptionIds = exceptionIds;
     }
 
-    public AppStartRequestBody(String deviceId, String gcmId, List<BigInteger> friendsFacebookIds) {
+    public AppStartRequest(String deviceId, String gcmId, List<BigInteger> friendsFacebookIds) {
         this.deviceId = deviceId;
         this.gcmId = gcmId;
         this.friendsFacebookIds = friendsFacebookIds;

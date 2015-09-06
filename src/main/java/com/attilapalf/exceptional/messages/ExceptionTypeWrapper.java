@@ -1,4 +1,4 @@
-package com.attilapalf.exceptional.wrappers;
+package com.attilapalf.exceptional.messages;
 
 import com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity;
 import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
