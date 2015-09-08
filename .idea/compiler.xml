@@ -26,7 +26,7 @@
         <module name="Exceptional" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="Exceptional" target="1.8" />
     </bytecodeTargetLevel>
   </component>

@@ -1,9 +1,10 @@
 package com.attilapalf.exceptional.repositories.friendships;
 
-import com.attilapalf.exceptional.entities.FriendshipsEntity;
+import java.math.BigInteger;
+
 import org.springframework.data.repository.CrudRepository;
 
-import java.math.BigInteger;
+import com.attilapalf.exceptional.entities.FriendshipsEntity;
 
 /**
  * Created by palfi on 2015-08-20.
