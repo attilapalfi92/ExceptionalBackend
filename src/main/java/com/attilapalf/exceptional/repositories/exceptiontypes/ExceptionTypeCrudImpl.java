@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ExceptionTypeCrudImpl implements ExceptionTypeCrudCustom {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public List<ExceptionTypesEntity> findNewerTypesThanVersion(int version) {

@@ -10,4 +10,5 @@ public interface ConstantCrudCustom {
     int getExceptionVersion();
     int getStartingPoint();
     int getClientCacheSize();
+    void incrementExceptionVersion();
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FriendshipCrudImpl implements FriendshipCrudCustom {
     @Autowired
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public List<FriendshipsEntity> findMyFriends(UsersEntity user) {

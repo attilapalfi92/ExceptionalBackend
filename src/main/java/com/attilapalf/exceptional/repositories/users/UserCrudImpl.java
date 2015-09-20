@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class UserCrudImpl implements UserCrudCustom {
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Autowired
-    ConstantCrud constantCrud;
+    private ConstantCrud constantCrud;
 
     /**
      * Finds the possible friends of the user, based on the Users table

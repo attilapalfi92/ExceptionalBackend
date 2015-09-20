@@ -13,7 +13,7 @@ import java.math.BigInteger;
 public class ConstantCrudImpl implements ConstantCrudCustom {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public int getMaxExceptionsPerUser() {
@@ -33,6 +33,11 @@ public class ConstantCrudImpl implements ConstantCrudCustom {
     @Override
     public int getClientCacheSize() {
         return getIntValue("client_cache_size");
+    }
+
+    @Override
+    public void incrementExceptionVersion( ) {
+
     }
 
     private int getIntValue(String constantName) {

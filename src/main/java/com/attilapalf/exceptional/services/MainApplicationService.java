@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.attilapalf.exceptional.entities.DevicesEntity;
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
@@ -87,15 +86,14 @@ public class MainApplicationService {
         saveDeviceForUser( requestBody, user );
         removeInvalidFriendships( requestBody, user );
         List<UsersEntity> friends = saveNewFriends( requestBody, user );
-        if ( newUser ) {
-            gcmMessageService.sendFriendNotification( user, friends );
-        }
+        gcmMessageService.sendFriendNotification( user, friends );
         return createResponseForFirstAppStart( user );
     }
 
     private void removeInvalidFriendships( AppStartRequest requestBody, UsersEntity user ) {
         List<UsersEntity> existingFriends = friendshipCrud.findUsersExistingFriends( user );
-        List<BigInteger> existingFriendIds = existingFriends.stream().map( UsersEntity::getFacebookId ).collect( Collectors.toList() );
+        List<BigInteger> existingFriendIds = existingFriends.stream().map( UsersEntity::getFacebookId )
+                .collect( Collectors.toList() );
         existingFriendIds.removeAll( requestBody.getFriendsFacebookIds() );
         friendshipCrud.deleteFriendships( user, existingFriendIds );
     }
@@ -115,7 +113,8 @@ public class MainApplicationService {
 
     private List<UsersEntity> saveNewFriendships( UsersEntity user, List<BigInteger> currentValidFriendIds ) {
         List<UsersEntity> existingFriends = friendshipCrud.findUsersExistingFriends( user );
-        List<BigInteger> existingFriendIds = existingFriends.stream().map( UsersEntity::getFacebookId ).collect( Collectors.toList() );
+        List<BigInteger> existingFriendIds = existingFriends.stream().map( UsersEntity::getFacebookId )
+                .collect( Collectors.toList() );
         currentValidFriendIds.removeAll( existingFriendIds );
         friendshipCrud.saveFriendships( user, userCrud.userIdsToUsersEntities( currentValidFriendIds ) );
         return existingFriends;
@@ -124,7 +123,8 @@ public class MainApplicationService {
     private AppStartResponse initResponseWithExceptions( UsersEntity user ) {
         List<ExceptionInstancesEntity> exceptions = exceptionInstanceCrud.findLastExceptionsForUser( user );
         AppStartResponse responseBody = new AppStartResponse();
-        responseBody.setMyExceptions( exceptions.stream().map( ExceptionInstanceWrapper::new ).collect( Collectors.toList() ) );
+        responseBody.setMyExceptions( exceptions.stream().map( ExceptionInstanceWrapper::new )
+                .collect( Collectors.toList() ) );
         return responseBody;
     }
 
@@ -141,7 +141,8 @@ public class MainApplicationService {
         addVoteMetadataToResponse( user, responseBody );
         responseBody.setPoints( user.getPoints() );
         List<UsersEntity> friends = friendshipCrud.findUsersExistingFriends( user );
-        responseBody.setFriendsPoints( friends.stream().collect( Collectors.toMap( UsersEntity::getFacebookId, UsersEntity::getPoints ) ) );
+        responseBody.setFriendsPoints( friends.stream().collect( Collectors.toMap(
+                UsersEntity::getFacebookId, UsersEntity::getPoints ) ) );
     }
 
     private void addVoteMetadataToResponse( UsersEntity user, AppStartResponse responseBody ) {
@@ -192,7 +193,8 @@ public class MainApplicationService {
         List<ExceptionInstancesEntity> exceptions = exceptionInstanceCrud
                 .findLastExceptionsNotAmongIds( user, requestBody.getKnownExceptionIds() );
         AppStartResponse response = new AppStartResponse();
-        response.setMyExceptions( exceptions.stream().map( ExceptionInstanceWrapper::new ).collect( Collectors.toList() ) );
+        response.setMyExceptions( exceptions.stream().map( ExceptionInstanceWrapper::new )
+                .collect( Collectors.toList() ) );
         return response;
     }
 
@@ -201,7 +203,8 @@ public class MainApplicationService {
         int currentVersion = constantCrud.getExceptionVersion();
         if ( currentVersion > knownVersion ) {
             List<ExceptionTypesEntity> exceptions = exceptionTypeCrud.findNewerTypesThanVersion( knownVersion );
-            responseBody.setExceptionTypes( exceptions.stream().map( ExceptionTypeWrapper::new ).collect( Collectors.toList() ) );
+            responseBody.setExceptionTypes( exceptions.stream().map( ExceptionTypeWrapper::new )
+                    .collect( Collectors.toList() ) );
         }
         responseBody.setExceptionVersion( currentVersion );
     }
