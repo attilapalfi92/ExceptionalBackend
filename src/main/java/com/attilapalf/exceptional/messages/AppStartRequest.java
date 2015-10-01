@@ -102,4 +102,34 @@ public class AppStartRequest extends BaseExceptionRequest {
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
     }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+
+        AppStartRequest that = (AppStartRequest) o;
+
+        if ( exceptionVersion != that.exceptionVersion ) return false;
+        if ( deviceId != null ? !deviceId.equals( that.deviceId ) : that.deviceId != null ) return false;
+        if ( gcmId != null ? !gcmId.equals( that.gcmId ) : that.gcmId != null ) return false;
+        if ( friendsFacebookIds != null ? !friendsFacebookIds.equals( that.friendsFacebookIds ) : that.friendsFacebookIds != null )
+            return false;
+        if ( firstName != null ? !firstName.equals( that.firstName ) : that.firstName != null ) return false;
+        if ( lastName != null ? !lastName.equals( that.lastName ) : that.lastName != null ) return false;
+        return !( deviceName != null ? !deviceName.equals( that.deviceName ) : that.deviceName != null );
+
+    }
+
+    @Override
+    public int hashCode( ) {
+        int result = deviceId != null ? deviceId.hashCode() : 0;
+        result = 31 * result + ( gcmId != null ? gcmId.hashCode() : 0 );
+        result = 31 * result + ( friendsFacebookIds != null ? friendsFacebookIds.hashCode() : 0 );
+        result = 31 * result + exceptionVersion;
+        result = 31 * result + ( firstName != null ? firstName.hashCode() : 0 );
+        result = 31 * result + ( lastName != null ? lastName.hashCode() : 0 );
+        result = 31 * result + ( deviceName != null ? deviceName.hashCode() : 0 );
+        return result;
+    }
 }

@@ -22,7 +22,7 @@ import com.attilapalf.exceptional.services.ExceptionService;
 public class ExceptionController {
 
     @Autowired
-    ExceptionService exceptionService;
+    private ExceptionService exceptionService;
 
     @RequestMapping( value = "/exception", method = RequestMethod.POST )
     public ResponseEntity<ExceptionSentResponse> throwException( @RequestBody ExceptionInstanceWrapper exceptionInstanceWrapper ) {

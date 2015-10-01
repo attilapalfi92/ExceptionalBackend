@@ -12,9 +12,7 @@ import com.attilapalf.exceptional.messages.BaseExceptionRequest;
 import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 import com.attilapalf.exceptional.messages.ExceptionRefreshResponse;
 import com.attilapalf.exceptional.messages.ExceptionSentResponse;
-import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud;
-import com.attilapalf.exceptional.repositories.exceptiontypes.ExceptionTypeCrud;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
 
 /**

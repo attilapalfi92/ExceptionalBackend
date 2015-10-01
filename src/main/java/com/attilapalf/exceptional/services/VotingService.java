@@ -1,6 +1,8 @@
 package com.attilapalf.exceptional.services;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -73,14 +75,18 @@ public class VotingService {
     // second, minute, hour, day of month, month, day(s) of week
     @Scheduled( cron = "1 0 0 ? * MON" )
     @Transactional
-    protected void resetVoting( ) {
+    public void resetVoting( ) {
         BeingVotedExceptionTypeEntity winner = beingVotedCrud.findWinner();
-        if ( winner != null ) {
-            ExceptionTypesEntity exceptionType = createExceptionTypesEntity( winner );
-            exceptionTypeCrud.save( exceptionType );
-            beingVotedCrud.deleteAll();
-            constantCrud.incrementExceptionVersion();
-        }
+        removeUserReferences();
+        finishVotingReset( winner );
+    }
+
+    private void removeUserReferences( ) {
+        userCrud.findAll().forEach( user -> {
+            user.setVotedForException( null );
+            user.setMySubmissionForVote( null );
+            userCrud.save( user );
+        });
     }
 
     private ExceptionTypesEntity createExceptionTypesEntity( BeingVotedExceptionTypeEntity winner ) {
@@ -92,5 +98,14 @@ public class VotingService {
         exceptionType.setDescription( winner.getDescription() );
         exceptionType.setVersion( winner.getVersion() );
         return exceptionType;
+    }
+
+    private void finishVotingReset( BeingVotedExceptionTypeEntity winner ) {
+        if ( winner != null ) {
+            ExceptionTypesEntity exceptionType = createExceptionTypesEntity( winner );
+            exceptionTypeCrud.save( exceptionType );
+            beingVotedCrud.deleteAll();
+            constantCrud.incrementExceptionVersion();
+        }
     }
 }

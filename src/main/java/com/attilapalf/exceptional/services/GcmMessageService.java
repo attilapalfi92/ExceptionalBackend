@@ -43,7 +43,8 @@ public class GcmMessageService {
 
     public void sendExceptionNotification( UsersEntity receiver, UsersEntity sender, ExceptionInstancesEntity exception ) {
         List<String> receiverGcmIds = getGcmIds( receiver );
-        ExceptionNotification notification = new ExceptionNotification( receiverGcmIds, exception, receiver.getPoints(), sender.getPoints() );
+        ExceptionNotification notification = new ExceptionNotification( receiverGcmIds, exception, receiver.getPoints(),
+                sender.getPoints() );
         HttpEntity<ExceptionNotification> gcmRequestData = new HttpEntity<>( notification, httpHeaders );
         try {
             String gcmResponse = restTemplate.postForObject( URL, gcmRequestData, String.class );
