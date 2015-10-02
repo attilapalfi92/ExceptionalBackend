@@ -1,6 +1,7 @@
 package com.attilapalf.exceptional.messages.notifications;
 
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
+import com.attilapalfi.exceptional.model.Question;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -12,7 +13,8 @@ public class ExceptionNotification extends BaseNotification {
 
     private Data data;
 
-    public ExceptionNotification(List<String> toGcmIds, ExceptionInstancesEntity exception, int yourPoints, int friendPoints) {
+    public ExceptionNotification( List<String> toGcmIds, ExceptionInstancesEntity exception, int yourPoints,
+                                  int friendPoints, Question question ) {
         registration_ids = toGcmIds;
         data = new Data();
         data.setTypeId(exception.getType().getId());
@@ -24,12 +26,10 @@ public class ExceptionNotification extends BaseNotification {
         data.setLatitude(exception.getLatitude());
         data.setYourPoints(yourPoints);
         data.setFriendPoints(friendPoints);
+        data.setQuestionText( question.getText() );
+        data.setHasQuestion( question.getHasQuestion() );
+        data.setYesIsCorrect( question.getYesIsCorrect() );
     }
-
-
-
-
-
 
     public static class Data extends BaseMessageData {
         private int typeId;
@@ -41,6 +41,9 @@ public class ExceptionNotification extends BaseNotification {
         private BigInteger toWho;
         private int yourPoints;
         private int friendPoints;
+        private String questionText;
+        private boolean yesIsCorrect;
+        private boolean hasQuestion;
 
         public Data() {
             notificationType = "exception";
@@ -120,6 +123,30 @@ public class ExceptionNotification extends BaseNotification {
 
         public void setFriendPoints(int friendPoints) {
             this.friendPoints = friendPoints;
+        }
+
+        public String getQuestionText( ) {
+            return questionText;
+        }
+
+        public void setQuestionText( String questionText ) {
+            this.questionText = questionText;
+        }
+
+        public boolean isYesIsCorrect( ) {
+            return yesIsCorrect;
+        }
+
+        public void setYesIsCorrect( boolean yesIsCorrect ) {
+            this.yesIsCorrect = yesIsCorrect;
+        }
+
+        public boolean isHasQuestion( ) {
+            return hasQuestion;
+        }
+
+        public void setHasQuestion( boolean hasQuestion ) {
+            this.hasQuestion = hasQuestion;
         }
     }
 

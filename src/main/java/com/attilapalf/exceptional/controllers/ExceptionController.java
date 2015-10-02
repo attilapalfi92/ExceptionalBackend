@@ -20,7 +20,6 @@ import com.attilapalf.exceptional.services.ExceptionService;
 @SuppressWarnings( "SpringJavaAutowiringInspection" )
 @RestController
 public class ExceptionController {
-
     @Autowired
     private ExceptionService exceptionService;
 
