@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import javax.annotation.PostConstruct
 
@@ -65,7 +64,7 @@ public class GcmMessageServiceImpl : GcmMessageService {
         val gcmRequestData = HttpEntity(notification, httpHeaders)
         try {
             val gcmResponse = restTemplate.postForObject(URL, gcmRequestData, String::class.java)
-        } catch (e: RestClientException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 

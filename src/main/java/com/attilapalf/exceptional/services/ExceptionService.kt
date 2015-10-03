@@ -72,6 +72,6 @@ public class ExceptionServiceImpl : ExceptionService {
         val exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
                 user,
                 requestBody.knownExceptionIds)
-        return ExceptionRefreshResponse(exceptions)
+        return ExceptionRefreshResponse(exceptions.map { ExceptionInstanceWrapper(it) }, listOf())
     }
 }
