@@ -18,9 +18,9 @@ import com.attilapalfi.exceptional.model.Question;
 /**
  * Created by Attila on 2015-06-13.
  */
-@SuppressWarnings( "SpringJavaAutowiringInspection" )
 @RestController
 public class ExceptionController {
+
     @Autowired
     private ExceptionService exceptionService;
 

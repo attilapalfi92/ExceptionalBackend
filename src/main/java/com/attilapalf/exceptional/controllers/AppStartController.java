@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.controllers;
 
-import com.attilapalf.exceptional.services.MainApplicationService;
+import com.attilapalf.exceptional.services.AppStartService;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
 import com.attilapalf.exceptional.messages.AppStartRequest;
@@ -17,15 +17,14 @@ import java.math.BigInteger;
 /**
  * Created by Attila on 2015-06-10.
  */
-@SuppressWarnings("SpringJavaAutowiringInspection")
 @RestController
-public class MainApplicationController {
+public class AppStartController {
 
     @Autowired
     private UserCrud userCrud;
 
     @Autowired
-    private MainApplicationService mainApplicationService;
+    private AppStartService appStartService;
 
 
     @RequestMapping(value = "/user/byPage/{page}/{size}", method = RequestMethod.GET)
@@ -43,7 +42,7 @@ public class MainApplicationController {
     @RequestMapping(value = "/application/firstAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponse> firstAppStart(@RequestBody AppStartRequest requestBody) {
         try {
-            AppStartResponse response = mainApplicationService.firstAppStart(requestBody);
+            AppStartResponse response = appStartService.firstAppStart(requestBody);
             ResponseEntity<AppStartResponse> result = new ResponseEntity<>(response, HttpStatus.OK);
             return result;
         } catch (Throwable t) {
@@ -55,7 +54,7 @@ public class MainApplicationController {
 
     @RequestMapping(value = "/application/regularAppStart", method = RequestMethod.POST)
     public ResponseEntity<AppStartResponse> regularAppStart(@RequestBody AppStartRequest requestBody) {
-        return new ResponseEntity<>(mainApplicationService.regularAppStart(requestBody), HttpStatus.OK);
+        return new ResponseEntity<>( appStartService.regularAppStart(requestBody), HttpStatus.OK);
     }
 
 }

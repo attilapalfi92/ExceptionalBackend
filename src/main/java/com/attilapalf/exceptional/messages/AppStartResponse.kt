@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.messages
 
-import com.attilapalfi.exceptional.model.QuestionException
+import com.attilapalfi.exceptional.model.ExceptionQuestion
 import java.math.BigInteger
 
 /**
@@ -14,4 +14,4 @@ public data class AppStartResponse(var myExceptions: List<ExceptionInstanceWrapp
                                    var exceptionVersion: Int = 0,
                                    var submittedThisWeek: Boolean = true,
                                    var votedThisWeek: Boolean = true,
-                                   var questionExceptions: List<QuestionException> = listOf());
+                                   var exceptionQuestions: List<ExceptionQuestion> = listOf());
