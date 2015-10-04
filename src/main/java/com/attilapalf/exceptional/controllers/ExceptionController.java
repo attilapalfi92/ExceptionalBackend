@@ -13,6 +13,7 @@ import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 import com.attilapalf.exceptional.messages.ExceptionRefreshResponse;
 import com.attilapalf.exceptional.messages.ExceptionSentResponse;
 import com.attilapalf.exceptional.services.ExceptionService;
+import com.attilapalfi.exceptional.model.Question;
 
 /**
  * Created by Attila on 2015-06-13.
@@ -25,8 +26,11 @@ public class ExceptionController {
 
     @RequestMapping( value = "/exception", method = RequestMethod.POST )
     public ResponseEntity<ExceptionSentResponse> throwException( @RequestBody ExceptionInstanceWrapper exceptionInstanceWrapper ) {
-        ExceptionSentResponse response = exceptionService.throwException( exceptionInstanceWrapper );
-        return new ResponseEntity<>( response, HttpStatus.OK );
+        Question question = exceptionInstanceWrapper.getQuestion();
+        if ( question.getText().length() > 150 ) {
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+        }
+        return new ResponseEntity<>( exceptionService.throwException( exceptionInstanceWrapper ), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/exception/refresh", method = RequestMethod.POST )

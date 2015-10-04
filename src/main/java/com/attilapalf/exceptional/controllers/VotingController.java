@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.attilapalf.exceptional.messages.SubmitRequest;
-import com.attilapalf.exceptional.messages.SubmitResponse;
-import com.attilapalf.exceptional.messages.VoteRequest;
-import com.attilapalf.exceptional.messages.VoteResponse;
+import com.attilapalf.exceptional.messages.*;
 import com.attilapalf.exceptional.services.VotingService;
 
 /**
@@ -30,6 +27,16 @@ public class VotingController {
 
     @RequestMapping( value = "/voting/submit", method = RequestMethod.POST )
     public ResponseEntity<SubmitResponse> submit( @RequestBody SubmitRequest submitRequest ) {
+        if ( invalidLength( submitRequest ) ) {
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+        }
         return new ResponseEntity<>( votingService.submitType( submitRequest ), HttpStatus.OK );
+    }
+
+    private boolean invalidLength( @RequestBody SubmitRequest submitRequest ) {
+        ExceptionTypeWrapper submitted = submitRequest.getSubmittedType();
+        return submitted.getDescription().length() > 1000 ||
+                submitted.getShortName().length() > 100 ||
+                submitted.getPrefix().length() > 200;
     }
 }
