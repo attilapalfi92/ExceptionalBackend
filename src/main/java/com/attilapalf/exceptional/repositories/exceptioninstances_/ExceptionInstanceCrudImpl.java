@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
@@ -14,6 +15,7 @@ import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
 import com.attilapalf.exceptional.entities.UsersEntity;
 import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
+import com.attilapalfi.exceptional.model.Question;
 
 /**
  * Created by Attila on 2015-06-11.
@@ -58,15 +60,30 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
     }
 
     @Override
-    public ExceptionInstancesEntity saveNewException( ExceptionInstanceWrapper exceptionInstanceWrapper ) {
-        ExceptionInstancesEntity exception = new ExceptionInstancesEntity();
-        exception.setDateTime( new Timestamp( exceptionInstanceWrapper.getTimeInMillis() ) );
-        exception.setType( em.getReference( ExceptionTypesEntity.class, exceptionInstanceWrapper.getExceptionTypeId() ) );
-        exception.setFromUser( em.getReference( UsersEntity.class, exceptionInstanceWrapper.getFromWho() ) );
-        exception.setToUser( em.getReference( UsersEntity.class, exceptionInstanceWrapper.getToWho() ) );
-        exception.setLatitude( exceptionInstanceWrapper.getLatitude() );
-        exception.setLongitude( exceptionInstanceWrapper.getLongitude() );
+    public ExceptionInstancesEntity saveNewException( ExceptionInstanceWrapper instanceWrapper ) {
+        ExceptionInstancesEntity exception = buildExceptionInstance( instanceWrapper );
         em.persist( exception );
         return exception;
+    }
+
+    @NotNull
+    private ExceptionInstancesEntity buildExceptionInstance( ExceptionInstanceWrapper instanceWrapper ) {
+        ExceptionInstancesEntity exception = new ExceptionInstancesEntity();
+        exception.setDateTime( new Timestamp( instanceWrapper.getTimeInMillis() ) );
+        exception.setType( em.getReference( ExceptionTypesEntity.class, instanceWrapper.getExceptionTypeId() ) );
+        exception.setFromUser( em.getReference( UsersEntity.class, instanceWrapper.getFromWho() ) );
+        exception.setToUser( em.getReference( UsersEntity.class, instanceWrapper.getToWho() ) );
+        exception.setLatitude( instanceWrapper.getLatitude() );
+        exception.setLongitude( instanceWrapper.getLongitude() );
+        setQuestionForException( instanceWrapper, exception );
+        return exception;
+    }
+
+    private void setQuestionForException( ExceptionInstanceWrapper instanceWrapper, ExceptionInstancesEntity exception ) {
+        Question question = instanceWrapper.getQuestion();
+        exception.setQuestionText( question.getHasQuestion() ? question.getText() : null );
+        exception.setAnswered( false );
+        exception.setHasQuestion( question.getHasQuestion() );
+        exception.setYesIsCorrect( question.getYesIsCorrect() );
     }
 }

@@ -35,8 +35,8 @@ public class VotingController {
 
     private boolean invalidLength( @RequestBody SubmitRequest submitRequest ) {
         ExceptionTypeWrapper submitted = submitRequest.getSubmittedType();
-        return submitted.getDescription().length() > 1000 ||
-                submitted.getShortName().length() > 100 ||
-                submitted.getPrefix().length() > 200;
+        return submitted.getDescription().length() > 500 ||
+                submitted.getShortName().length() > 50 ||
+                submitted.getPrefix().length() > 50;
     }
 }

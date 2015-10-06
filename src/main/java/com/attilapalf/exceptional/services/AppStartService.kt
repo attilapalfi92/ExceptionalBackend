@@ -133,12 +133,11 @@ public class AppStartServiceImpl : AppStartService {
         addVoteMetadataToResponse(user, responseBody)
         addFriendsPointsToResponse(responseBody, user)
         responseBody.points = user.points
-        responseBody.exceptionQuestions = listOf()
     }
 
     private fun addFriendsPointsToResponse(responseBody: AppStartResponse, user: UsersEntity) {
         val friends = friendshipCrud.findUsersExistingFriends(user)
-        responseBody.friendsPoints = friends.map { it.facebookId to it.points }.toMap()
+        responseBody.friendsPoints = friends.toMap({ it.facebookId }, { it.points })
     }
 
     private fun addVoteMetadataToResponse(user: UsersEntity, responseBody: AppStartResponse) {

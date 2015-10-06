@@ -13,5 +13,4 @@ public data class AppStartResponse(var myExceptions: List<ExceptionInstanceWrapp
                                    var points: Int = 100,
                                    var exceptionVersion: Int = 0,
                                    var submittedThisWeek: Boolean = true,
-                                   var votedThisWeek: Boolean = true,
-                                   var exceptionQuestions: List<ExceptionQuestion> = listOf());
+                                   var votedThisWeek: Boolean = true);

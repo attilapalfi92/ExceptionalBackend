@@ -22,6 +22,7 @@ public data class ExceptionInstanceWrapper(var fromWho: BigInteger = BigInteger(
             e.longitude,
             e.latitude,
             e.type.id,
-            e.id
+            e.id,
+            Question(e.questionText, e.isYesIsCorrect, e.isHasQuestion, e.isAnswered)
     )
 };

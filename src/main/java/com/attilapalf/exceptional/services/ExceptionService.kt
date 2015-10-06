@@ -2,10 +2,7 @@ package com.attilapalf.exceptional.services
 
 import com.attilapalf.exceptional.entities.ExceptionInstancesEntity
 import com.attilapalf.exceptional.entities.UsersEntity
-import com.attilapalf.exceptional.messages.BaseExceptionRequest
-import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper
-import com.attilapalf.exceptional.messages.ExceptionRefreshResponse
-import com.attilapalf.exceptional.messages.ExceptionSentResponse
+import com.attilapalf.exceptional.messages.*
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud
 import com.attilapalf.exceptional.repositories.users.UserCrud
 import com.attilapalfi.exceptional.model.Question
@@ -19,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 public interface ExceptionService {
     fun throwException(instanceWrapper: ExceptionInstanceWrapper): ExceptionSentResponse
     fun refreshExceptions(requestBody: BaseExceptionRequest): ExceptionRefreshResponse
+    fun answerQuestion(questionAnswer: QuestionAnswer): ExceptionSentResponse
 }
 
 @Service
@@ -32,13 +30,13 @@ public class ExceptionServiceImpl : ExceptionService {
 
 
     @Transactional
-    override public fun throwException(instanceWrapper: ExceptionInstanceWrapper): ExceptionSentResponse {
+    override fun throwException(instanceWrapper: ExceptionInstanceWrapper): ExceptionSentResponse {
         val users = findUsers(instanceWrapper)
-        updateUsersPoints(users, instanceWrapper.question)
+        updateUsersPoints(users.first, users.second, instanceWrapper.question)
         val exception = exceptionCrud.saveNewException(instanceWrapper)
         instanceWrapper.instanceId = exception.id
         gcmMessageService.sendExceptionNotification(users.first, users.second, exception, instanceWrapper.question)
-        return createExceptionSentResponse(users, instanceWrapper, exception)
+        return createExceptionSentResponse(users.first, users.second, instanceWrapper, exception)
     }
 
     private fun findUsers(instanceWrapper: ExceptionInstanceWrapper): Pair<UsersEntity, UsersEntity> {
@@ -46,32 +44,51 @@ public class ExceptionServiceImpl : ExceptionService {
                 userCrud.findOne(instanceWrapper.toWho))
     }
 
-    private fun updateUsersPoints(users: Pair<UsersEntity, UsersEntity>, question: Question) {
+    private fun updateUsersPoints(sender: UsersEntity, receiver: UsersEntity, question: Question) {
         if ( !question.hasQuestion ) {
-            users.first.points = users.first.points + 25
-            users.second.points = users.second.points - 20
-            userCrud.save(users.first)
-            userCrud.save(users.second)
+            sender.points = sender.points + 25
+            receiver.points = receiver.points - 20
+            userCrud.save(sender)
+            userCrud.save(receiver)
         }
     }
 
-    private fun createExceptionSentResponse(users: Pair<UsersEntity, UsersEntity>,
+    private fun createExceptionSentResponse(sender: UsersEntity, receiver: UsersEntity,
                                             instanceWrapper: ExceptionInstanceWrapper,
                                             exception: ExceptionInstancesEntity): ExceptionSentResponse {
         return ExceptionSentResponse(
-                instanceWrapper,
                 exception.type.shortName,
-                users.first.points,
-                users.second.points
-        )
+                sender.points,
+                receiver.points,
+                instanceWrapper)
     }
 
     @Transactional
-    override public fun refreshExceptions(requestBody: BaseExceptionRequest): ExceptionRefreshResponse {
+    override fun refreshExceptions(requestBody: BaseExceptionRequest): ExceptionRefreshResponse {
         val user = userCrud.findOne(requestBody.userFacebookId)
         val exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
                 user,
                 requestBody.knownExceptionIds)
         return ExceptionRefreshResponse(exceptions.map { ExceptionInstanceWrapper(it) }, listOf())
+    }
+
+    @Transactional
+    override fun answerQuestion(questionAnswer: QuestionAnswer): ExceptionSentResponse {
+        val exception = exceptionCrud.findOne(questionAnswer.exceptionInstanceId)
+        updateUsersPoints(exception, questionAnswer)
+        exception.isAnswered = true
+        exceptionCrud.save(exception)
+        return ExceptionSentResponse(
+                exception.type.shortName,
+                exception.fromUser.points,
+                exception.toUser.points,
+                ExceptionInstanceWrapper(exception))
+    }
+
+    private fun updateUsersPoints(exception: ExceptionInstancesEntity, questionAnswer: QuestionAnswer) {
+        if ( exception.isYesIsCorrect != questionAnswer.answeredYes ) {
+            exception.fromUser.points = exception.fromUser.points + 50
+            exception.toUser.points = exception.toUser.points - 40
+        }
     }
 }
