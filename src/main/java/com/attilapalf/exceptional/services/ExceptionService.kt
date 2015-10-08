@@ -32,17 +32,19 @@ public class ExceptionServiceImpl : ExceptionService {
     @Transactional
     override fun throwException(instanceWrapper: ExceptionInstanceWrapper): ExceptionSentResponse {
         val users = findUsers(instanceWrapper)
-        updateUsersPoints(users.first, users.second, instanceWrapper.question)
+        updateUsersPoints(users.sender, users.receiver, instanceWrapper.question)
         val exception = exceptionCrud.saveNewException(instanceWrapper)
         instanceWrapper.instanceId = exception.id
-        gcmMessageService.sendExceptionNotification(users.first, users.second, exception, instanceWrapper.question)
-        return createExceptionSentResponse(users.first, users.second, instanceWrapper, exception)
+        gcmMessageService.sendExceptionNotification(users.sender, users.receiver, exception, instanceWrapper.question)
+        return createExceptionSentResponse(users.sender, users.receiver, instanceWrapper, exception)
     }
 
-    private fun findUsers(instanceWrapper: ExceptionInstanceWrapper): Pair<UsersEntity, UsersEntity> {
-        return Pair(userCrud.findOne(instanceWrapper.fromWho),
-                userCrud.findOne(instanceWrapper.toWho))
-    }
+    private fun findUsers(instanceWrapper: ExceptionInstanceWrapper) =
+            object {
+                val sender = userCrud.findOne(instanceWrapper.fromWho)
+                val receiver = userCrud.findOne(instanceWrapper.toWho)
+            }
+
 
     private fun updateUsersPoints(sender: UsersEntity, receiver: UsersEntity, question: Question) {
         if ( !question.hasQuestion ) {
@@ -69,7 +71,7 @@ public class ExceptionServiceImpl : ExceptionService {
         val exceptions = exceptionCrud.findLastExceptionsNotAmongIds(
                 user,
                 requestBody.knownExceptionIds)
-        return ExceptionRefreshResponse(exceptions.map { ExceptionInstanceWrapper(it) }, listOf())
+        return ExceptionRefreshResponse(exceptions.map { ExceptionInstanceWrapper(it) })
     }
 
     @Transactional

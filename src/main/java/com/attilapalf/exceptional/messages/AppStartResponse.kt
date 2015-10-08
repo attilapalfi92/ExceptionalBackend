@@ -1,6 +1,5 @@
 package com.attilapalf.exceptional.messages
 
-import com.attilapalfi.exceptional.model.ExceptionQuestion
 import java.math.BigInteger
 
 /**
