@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.repositories.users;
 
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.User;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,12 +26,12 @@ public class UserCrudImpl implements UserCrudCustom {
      * @return possible friends of the user
      */
     @Override
-    public List<UsersEntity> userIdsToUsersEntities(List<BigInteger> facebookFriends) {
+    public List<User> userIdsToUsersEntities(List<BigInteger> facebookFriends) {
         if (!facebookFriends.isEmpty()) {
-            List<UsersEntity> result = em.createQuery(
-                    "SELECT u FROM UsersEntity u WHERE " +
+            List<User> result = em.createQuery(
+                    "SELECT u FROM User u WHERE " +
                             "u.facebookId IN :friends",
-                    UsersEntity.class)
+                    User.class)
                     .setParameter("friends", facebookFriends)
                     .getResultList();
             return result;
@@ -42,9 +41,9 @@ public class UserCrudImpl implements UserCrudCustom {
 
     @Override
     public void saveIfNew(BigInteger facebookId) {
-        UsersEntity user = em.find(UsersEntity.class, facebookId);
+        User user = em.find(User.class, facebookId);
         if (user == null) {
-            user = new UsersEntity();
+            user = new User();
             user.setFacebookId(facebookId);
             user.setPoints(constantCrud.getStartingPoint());
             em.persist(user);
@@ -64,15 +63,15 @@ public class UserCrudImpl implements UserCrudCustom {
     @Override
     public BigInteger getExceptionStartId(BigInteger userId) {
         BigInteger maxExceptionsPerUser = constantCrud.findOne(1).getIntValue();
-        UsersEntity user = em.createQuery("SELECT u FROM UsersEntity u " +
-                "WHERE u.facebookId = :userId", UsersEntity.class)
+        User user = em.createQuery("SELECT u FROM User u " +
+                "WHERE u.facebookId = :userId", User.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
         return user.getDbId().multiply(maxExceptionsPerUser);
     }
 
     @Override
-    public BigInteger getExceptionStartId(UsersEntity user) {
+    public BigInteger getExceptionStartId(User user) {
         BigInteger maxExceptionsPerUser = constantCrud.findOne(1).getIntValue();
         return user.getDbId().multiply(maxExceptionsPerUser);
     }

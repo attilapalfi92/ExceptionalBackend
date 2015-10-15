@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.repositories.exceptiontypes;
 
-import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
+import com.attilapalf.exceptional.entities.ExceptionType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,11 +14,11 @@ public class ExceptionTypeCrudImpl implements ExceptionTypeCrudCustom {
     private EntityManager em;
 
     @Override
-    public List<ExceptionTypesEntity> findNewerTypesThanVersion(int version) {
+    public List<ExceptionType> findNewerTypesThanVersion(int version) {
         return em.createQuery(
-                "SELECT e FROM ExceptionTypesEntity e " +
+                "SELECT e FROM ExceptionType e " +
                 "WHERE e.version > :version",
-                ExceptionTypesEntity.class)
+                ExceptionType.class)
                 .setParameter("version", version)
                 .getResultList();
     }

@@ -6,15 +6,15 @@ import javax.persistence.*;
  * Created by palfi on 2015-08-20.
  */
 @Entity
-@Table(name = "being_voted_exception_type", schema = "", catalog = "exceptional")
-public class BeingVotedExceptionTypeEntity {
+@Table(name = "being_voted_exception_types", schema = "", catalog = "exceptional")
+public class BeingVotedExceptionType {
     private int id;
     private String shortName;
     private String prefix;
     private String description;
     private int votes;
     private int version;
-    private UsersEntity submittedBy;
+    private User submittedBy;
 
     @Id
     @GeneratedValue
@@ -82,7 +82,7 @@ public class BeingVotedExceptionTypeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BeingVotedExceptionTypeEntity that = (BeingVotedExceptionTypeEntity) o;
+        BeingVotedExceptionType that = (BeingVotedExceptionType) o;
 
         if (id != that.id) return false;
         if (votes != that.votes) return false;
@@ -105,11 +105,11 @@ public class BeingVotedExceptionTypeEntity {
 
     @OneToOne
     @JoinColumn(name = "submitted_by_fb_id", referencedColumnName = "facebook_id", nullable = false)
-    public UsersEntity getSubmittedBy() {
+    public User getSubmittedBy() {
         return submittedBy;
     }
 
-    public void setSubmittedBy(UsersEntity submittedBy) {
+    public void setSubmittedBy(User submittedBy) {
         this.submittedBy = submittedBy;
     }
 }

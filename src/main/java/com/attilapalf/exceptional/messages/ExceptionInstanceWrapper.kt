@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.messages
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity
+import com.attilapalf.exceptional.entities.ExceptionInstance
 import com.attilapalfi.exceptional.model.Question
 import java.math.BigInteger
 
@@ -14,15 +14,25 @@ public data class ExceptionInstanceWrapper(var fromWho: BigInteger = BigInteger(
                                            var latitude: Double = 0.0,
                                            var exceptionTypeId: Int = 0,
                                            var instanceId: BigInteger = BigInteger("0"),
+                                           var pointsForSender: Int = 25,
+                                           var pointsForReceiver: Int = -20,
                                            var question: Question = Question()) {
-    constructor(e: ExceptionInstancesEntity) : this(
-            e.fromUser.facebookId,
-            e.toUser.facebookId,
-            e.dateTime.time,
-            e.longitude,
-            e.latitude,
-            e.type.id,
-            e.id,
-            Question(e.questionText, e.isYesIsCorrect, e.isHasQuestion, e.isAnswered)
+    constructor(e: ExceptionInstance) : this(
+            fromWho = e.fromUser.facebookId,
+            toWho = e.toUser.facebookId,
+            timeInMillis = e.dateTime.time,
+            longitude = e.longitude,
+            latitude = e.latitude,
+            exceptionTypeId = e.type.id,
+            instanceId = e.id,
+            pointsForSender = e.pointsForSender,
+            pointsForReceiver = e.pointsForReceiver,
+            question = Question(
+                    text = e.questionText,
+                    yesIsCorrect = e.isYesIsCorrect,
+                    hasQuestion = e.isHasQuestion,
+                    isAnswered = e.isAnswered,
+                    answeredCorrectly = e.isAnsweredCorrectly
+            )
     )
 };

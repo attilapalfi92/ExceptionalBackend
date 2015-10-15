@@ -2,13 +2,13 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="PersistenceUnit">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity</class>
-        <class>com.attilapalf.exceptional.entities.ConstantsEntity</class>
-        <class>com.attilapalf.exceptional.entities.DevicesEntity</class>
-        <class>com.attilapalf.exceptional.entities.ExceptionInstancesEntity</class>
-        <class>com.attilapalf.exceptional.entities.ExceptionTypesEntity</class>
-        <class>com.attilapalf.exceptional.entities.FriendshipsEntity</class>
-        <class>com.attilapalf.exceptional.entities.UsersEntity</class>
+        <class>com.attilapalf.exceptional.entities.BeingVotedExceptionType</class>
+        <class>com.attilapalf.exceptional.entities.Constant</class>
+        <class>com.attilapalf.exceptional.entities.Device</class>
+        <class>com.attilapalf.exceptional.entities.ExceptionInstance</class>
+        <class>com.attilapalf.exceptional.entities.ExceptionType</class>
+        <class>com.attilapalf.exceptional.entities.Friendship</class>
+        <class>com.attilapalf.exceptional.entities.User</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/exceptional"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

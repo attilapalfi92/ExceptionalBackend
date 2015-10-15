@@ -1,11 +1,10 @@
 package com.attilapalf.exceptional.services
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity
-import com.attilapalf.exceptional.entities.UsersEntity
+import com.attilapalf.exceptional.entities.ExceptionInstance
+import com.attilapalf.exceptional.entities.User
 import com.attilapalf.exceptional.messages.*
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud
 import com.attilapalf.exceptional.repositories.users.UserCrud
-import com.attilapalfi.exceptional.model.Question
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,37 +31,40 @@ public class ExceptionServiceImpl : ExceptionService {
     @Transactional
     override fun throwException(instanceWrapper: ExceptionInstanceWrapper): ExceptionSentResponse {
         val users = findUsers(instanceWrapper)
-        updateUsersPoints(users.sender, users.receiver, instanceWrapper.question)
-        val exception = exceptionCrud.saveNewException(instanceWrapper)
+        val exception = updateDatabase(instanceWrapper, users)
         instanceWrapper.instanceId = exception.id
         gcmMessageService.sendExceptionNotification(users.sender, users.receiver, exception, instanceWrapper.question)
-        return createExceptionSentResponse(users.sender, users.receiver, instanceWrapper, exception)
+        return ExceptionSentResponse(exception.type.shortName, users.sender.points, users.receiver.points, instanceWrapper)
     }
 
     private fun findUsers(instanceWrapper: ExceptionInstanceWrapper) =
-            object {
-                val sender = userCrud.findOne(instanceWrapper.fromWho)
-                val receiver = userCrud.findOne(instanceWrapper.toWho)
-            }
+            Users(
+                    sender = userCrud.findOne(instanceWrapper.fromWho),
+                    receiver = userCrud.findOne(instanceWrapper.toWho)
+            )
 
+    private fun updateDatabase(instanceWrapper: ExceptionInstanceWrapper, users: Users): ExceptionInstance {
+        calculatePoints(instanceWrapper)
+        updateUsersPoints(users.sender, users.receiver, instanceWrapper)
+        val exception = exceptionCrud.saveNewException(instanceWrapper)
+        return exception
+    }
 
-    private fun updateUsersPoints(sender: UsersEntity, receiver: UsersEntity, question: Question) {
-        if ( !question.hasQuestion ) {
-            sender.points = sender.points + 25
-            receiver.points = receiver.points - 20
-            userCrud.save(sender)
-            userCrud.save(receiver)
+    private fun calculatePoints(instanceWrapper: ExceptionInstanceWrapper) {
+        if ( !instanceWrapper.question.hasQuestion ) {
+            instanceWrapper.pointsForSender = 25
+            instanceWrapper.pointsForReceiver = -20
+        } else {
+            instanceWrapper.pointsForSender = 0
+            instanceWrapper.pointsForReceiver = 0
         }
     }
 
-    private fun createExceptionSentResponse(sender: UsersEntity, receiver: UsersEntity,
-                                            instanceWrapper: ExceptionInstanceWrapper,
-                                            exception: ExceptionInstancesEntity): ExceptionSentResponse {
-        return ExceptionSentResponse(
-                exception.type.shortName,
-                sender.points,
-                receiver.points,
-                instanceWrapper)
+    private fun updateUsersPoints(sender: User, receiver: User, instanceWrapper: ExceptionInstanceWrapper) {
+        sender.points = sender.points + instanceWrapper.pointsForSender
+        receiver.points = receiver.points + instanceWrapper.pointsForReceiver
+        userCrud.save(sender)
+        userCrud.save(receiver)
     }
 
     @Transactional
@@ -77,20 +79,21 @@ public class ExceptionServiceImpl : ExceptionService {
     @Transactional
     override fun answerQuestion(questionAnswer: QuestionAnswer): ExceptionSentResponse {
         val exception = exceptionCrud.findOne(questionAnswer.exceptionInstanceId)
-        updateUsersPoints(exception, questionAnswer)
+        updatePoints(exception, questionAnswer)
         exception.isAnswered = true
         exceptionCrud.save(exception)
-        return ExceptionSentResponse(
-                exception.type.shortName,
-                exception.fromUser.points,
-                exception.toUser.points,
+        return ExceptionSentResponse(exception.type.shortName, exception.fromUser.points, exception.toUser.points,
                 ExceptionInstanceWrapper(exception))
     }
 
-    private fun updateUsersPoints(exception: ExceptionInstancesEntity, questionAnswer: QuestionAnswer) {
+    private fun updatePoints(exception: ExceptionInstance, questionAnswer: QuestionAnswer) {
         if ( exception.isYesIsCorrect != questionAnswer.answeredYes ) {
-            exception.fromUser.points = exception.fromUser.points + 50
-            exception.toUser.points = exception.toUser.points - 40
+            exception.pointsForSender = 50;
+            exception.pointsForReceiver = -40;
+            exception.fromUser.points += exception.pointsForSender;
+            exception.toUser.points += exception.pointsForReceiver;
         }
     }
+
+    private data class Users(val sender: User, val receiver: User)
 }

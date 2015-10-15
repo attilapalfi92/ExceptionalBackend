@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.messages.notifications;
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
+import com.attilapalf.exceptional.entities.ExceptionInstance;
 import com.attilapalfi.exceptional.model.Question;
 
 import java.math.BigInteger;
@@ -13,7 +13,7 @@ public class ExceptionNotification extends BaseNotification {
 
     private Data data;
 
-    public ExceptionNotification( List<String> toGcmIds, ExceptionInstancesEntity exception, int yourPoints,
+    public ExceptionNotification( List<String> toGcmIds, ExceptionInstance exception, int yourPoints,
                                   int friendPoints, Question question ) {
         registration_ids = toGcmIds;
         data = new Data();

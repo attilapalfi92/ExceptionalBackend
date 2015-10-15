@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.attilapalf.exceptional.entities.ConstantsEntity;
+import com.attilapalf.exceptional.entities.Constant;
 
 /**
  * Created by 212461305 on 2015.07.10..
@@ -42,9 +42,9 @@ public class ConstantCrudImpl implements ConstantCrudCustom {
 
     @Override
     public void incrementExceptionVersion( ) {
-        ConstantsEntity version = em.createQuery( "SELECT c FROM ConstantsEntity c " +
+        Constant version = em.createQuery( "SELECT c FROM Constant c " +
                         "WHERE c.constantName = :constantName",
-                ConstantsEntity.class )
+                Constant.class )
                 .setParameter( CONSTANT_NAME, EXCEPTION_VERSION )
                 .getSingleResult();
         version.setIntValue( version.getIntValue().add( BigInteger.ONE ) );
@@ -52,9 +52,9 @@ public class ConstantCrudImpl implements ConstantCrudCustom {
     }
 
     private int getIntValue( String constantName ) {
-        ConstantsEntity constant = em.createQuery( "SELECT c FROM ConstantsEntity c " +
+        Constant constant = em.createQuery( "SELECT c FROM Constant c " +
                         "WHERE c.constantName = :constantName",
-                ConstantsEntity.class )
+                Constant.class )
                 .setParameter( CONSTANT_NAME, constantName )
                 .getSingleResult();
 

@@ -1,16 +1,14 @@
 package com.attilapalf.exceptional.services;
 
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity;
-import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.BeingVotedExceptionType;
+import com.attilapalf.exceptional.entities.ExceptionType;
+import com.attilapalf.exceptional.entities.User;
 import com.attilapalf.exceptional.messages.*;
 import com.attilapalf.exceptional.repositories.being_voted_exception_types.BeingVotedCrud;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
@@ -34,15 +32,15 @@ public class VotingService {
 
     @Transactional
     public VoteResponse voteForType( VoteRequest voteRequest ) {
-        UsersEntity voter = userCrud.findOne( voteRequest.getUserId() );
-        BeingVotedExceptionTypeEntity votedType = beingVotedCrud.findOne( voteRequest.getVotedExceptionId() );
+        User voter = userCrud.findOne( voteRequest.getUserId() );
+        BeingVotedExceptionType votedType = beingVotedCrud.findOne( voteRequest.getVotedExceptionId() );
         if ( voter.getVotedForException() == null ) {
             changeAffectedEntities( voter, votedType );
         }
         return new VoteResponse( true, new ExceptionTypeWrapper( votedType ) );
     }
 
-    private void changeAffectedEntities( UsersEntity voter, BeingVotedExceptionTypeEntity votedType ) {
+    private void changeAffectedEntities( User voter, BeingVotedExceptionType votedType ) {
         voter.setVotedForException( votedType );
         votedType.setVotes( votedType.getVotes() + 1 );
         userCrud.save( voter );
@@ -51,18 +49,18 @@ public class VotingService {
 
     @Transactional
     public SubmitResponse submitType( SubmitRequest submitRequest ) {
-        UsersEntity submitter = userCrud.findOne( submitRequest.getSubmitterId() );
+        User submitter = userCrud.findOne( submitRequest.getSubmitterId() );
         if ( submitter.getMySubmissionForVote() == null ) {
             ExceptionTypeWrapper wrapper = submitRequest.getSubmittedType();
-            BeingVotedExceptionTypeEntity exceptionType = createBeingVotedExceptionType( submitter, wrapper );
+            BeingVotedExceptionType exceptionType = createBeingVotedExceptionType( submitter, wrapper );
             beingVotedCrud.save( exceptionType );
             return new SubmitResponse( exceptionType, true );
         }
         return new SubmitResponse( (ExceptionTypeWrapper) null, true );
     }
 
-    private BeingVotedExceptionTypeEntity createBeingVotedExceptionType( UsersEntity submitter, ExceptionTypeWrapper wrapper ) {
-        BeingVotedExceptionTypeEntity exceptionType = new BeingVotedExceptionTypeEntity();
+    private BeingVotedExceptionType createBeingVotedExceptionType( User submitter, ExceptionTypeWrapper wrapper ) {
+        BeingVotedExceptionType exceptionType = new BeingVotedExceptionType();
         exceptionType.setSubmittedBy( submitter );
         exceptionType.setPrefix( wrapper.getPrefix() );
         exceptionType.setShortName( wrapper.getShortName() );
@@ -76,7 +74,7 @@ public class VotingService {
     @Scheduled( cron = "1 0 0 ? * MON" )
     @Transactional
     public void resetVoting( ) {
-        BeingVotedExceptionTypeEntity winner = beingVotedCrud.findWinner();
+        BeingVotedExceptionType winner = beingVotedCrud.findWinner();
         removeUserReferences();
         finishVotingReset( winner );
     }
@@ -89,8 +87,8 @@ public class VotingService {
         });
     }
 
-    private ExceptionTypesEntity createExceptionTypesEntity( BeingVotedExceptionTypeEntity winner ) {
-        ExceptionTypesEntity exceptionType = new ExceptionTypesEntity();
+    private ExceptionType createExceptionTypesEntity( BeingVotedExceptionType winner ) {
+        ExceptionType exceptionType = new ExceptionType();
         exceptionType.setType( "SUBMITTED" );
         exceptionType.setSubmittedBy( winner.getSubmittedBy() );
         exceptionType.setPrefix( winner.getPrefix() );
@@ -100,9 +98,9 @@ public class VotingService {
         return exceptionType;
     }
 
-    private void finishVotingReset( BeingVotedExceptionTypeEntity winner ) {
+    private void finishVotingReset( BeingVotedExceptionType winner ) {
         if ( winner != null ) {
-            ExceptionTypesEntity exceptionType = createExceptionTypesEntity( winner );
+            ExceptionType exceptionType = createExceptionTypesEntity( winner );
             exceptionTypeCrud.save( exceptionType );
             beingVotedCrud.deleteAll();
             constantCrud.incrementExceptionVersion();

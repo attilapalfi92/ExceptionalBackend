@@ -10,18 +10,21 @@ import javax.persistence.*;
  */
 @Entity
 @Table( name = "exception_instances", schema = "", catalog = "exceptional" )
-public class ExceptionInstancesEntity {
+public class ExceptionInstance {
     private BigInteger id;
     private double longitude;
     private double latitude;
     private Timestamp dateTime;
-    private UsersEntity fromUser;
-    private UsersEntity toUser;
-    private ExceptionTypesEntity type;
+    private User fromUser;
+    private User toUser;
+    private ExceptionType type;
     private String questionText;
     private boolean answered;
     private boolean hasQuestion;
     private boolean yesIsCorrect;
+    private boolean answeredCorrectly;
+    private int pointsForSender;
+    private int pointsForReceiver;
 
     @Id
     @GeneratedValue
@@ -104,12 +107,42 @@ public class ExceptionInstancesEntity {
         this.yesIsCorrect = yesIsCorrect;
     }
 
+    @Basic
+    @Column( name = "answered_correctly" )
+    public boolean isAnsweredCorrectly( ) {
+        return answeredCorrectly;
+    }
+
+    public void setAnsweredCorrectly( boolean answeredCorrectly ) {
+        this.answeredCorrectly = answeredCorrectly;
+    }
+
+    @Basic
+    @Column( name = "points_for_sender" )
+    public int getPointsForSender( ) {
+        return pointsForSender;
+    }
+
+    public void setPointsForSender( int pointsForSender ) {
+        this.pointsForSender = pointsForSender;
+    }
+
+    @Basic
+    @Column( name = "points_for_receiver" )
+    public int getPointsForReceiver( ) {
+        return pointsForReceiver;
+    }
+
+    public void setPointsForReceiver( int pointsForReceiver ) {
+        this.pointsForReceiver = pointsForReceiver;
+    }
+
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( o == null || getClass() != o.getClass() ) return false;
 
-        ExceptionInstancesEntity that = (ExceptionInstancesEntity) o;
+        ExceptionInstance that = (ExceptionInstance) o;
 
         if ( Double.compare( that.longitude, longitude ) != 0 ) return false;
         if ( Double.compare( that.latitude, latitude ) != 0 ) return false;
@@ -134,31 +167,31 @@ public class ExceptionInstancesEntity {
 
     @ManyToOne
     @JoinColumn( name = "from_user_fb_id", referencedColumnName = "facebook_id", nullable = false )
-    public UsersEntity getFromUser( ) {
+    public User getFromUser( ) {
         return fromUser;
     }
 
-    public void setFromUser( UsersEntity fromUser ) {
+    public void setFromUser( User fromUser ) {
         this.fromUser = fromUser;
     }
 
     @ManyToOne
     @JoinColumn( name = "to_user_fb_id", referencedColumnName = "facebook_id", nullable = false )
-    public UsersEntity getToUser( ) {
+    public User getToUser( ) {
         return toUser;
     }
 
-    public void setToUser( UsersEntity toUserId ) {
+    public void setToUser( User toUserId ) {
         this.toUser = toUserId;
     }
 
     @ManyToOne
     @JoinColumn( name = "type_id", referencedColumnName = "id", nullable = false )
-    public ExceptionTypesEntity getType( ) {
+    public ExceptionType getType( ) {
         return type;
     }
 
-    public void setType( ExceptionTypesEntity type ) {
+    public void setType( ExceptionType type ) {
         this.type = type;
     }
 }

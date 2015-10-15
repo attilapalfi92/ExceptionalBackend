@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.services
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity
-import com.attilapalf.exceptional.entities.UsersEntity
+import com.attilapalf.exceptional.entities.ExceptionInstance
+import com.attilapalf.exceptional.entities.User
 import com.attilapalf.exceptional.messages.notifications.ExceptionNotification
 import com.attilapalf.exceptional.messages.notifications.FriendNotification
 import com.attilapalfi.exceptional.model.Question
@@ -17,9 +17,9 @@ import javax.annotation.PostConstruct
  */
 
 public interface GcmMessageService {
-    fun sendFriendNotification(newUser: UsersEntity, friends: List<UsersEntity>)
-    fun sendExceptionNotification(sender: UsersEntity, receiver: UsersEntity,
-                                  exception: ExceptionInstancesEntity, question: Question)
+    fun sendFriendNotification(newUser: User, friends: List<User>)
+    fun sendExceptionNotification(sender: User, receiver: User,
+                                  exception: ExceptionInstance, question: Question)
 }
 
 @Service
@@ -36,13 +36,13 @@ public class GcmMessageServiceImpl : GcmMessageService {
         httpHeaders.set("Authorization", "key=" + API_KEY)
     }
 
-    override public fun sendFriendNotification(newUser: UsersEntity, friends: List<UsersEntity>) {
+    override public fun sendFriendNotification(newUser: User, friends: List<User>) {
         val restTemplate = RestTemplate()
         friends.forEach { friend -> pushNewFriendNotification(friend, newUser, restTemplate) }
     }
 
-    override public fun sendExceptionNotification(sender: UsersEntity, receiver: UsersEntity,
-                                                  exception: ExceptionInstancesEntity, question: Question) {
+    override public fun sendExceptionNotification(sender: User, receiver: User,
+                                                  exception: ExceptionInstance, question: Question) {
         val receiverGcmIds = getGcmIds(receiver)
         val notification = ExceptionNotification(receiverGcmIds, exception, receiver.points,
                 sender.points, question)
@@ -55,7 +55,7 @@ public class GcmMessageServiceImpl : GcmMessageService {
 
     }
 
-    private fun pushNewFriendNotification(receiver: UsersEntity, newUser: UsersEntity, restTemplate: RestTemplate) {
+    private fun pushNewFriendNotification(receiver: User, newUser: User, restTemplate: RestTemplate) {
         val receiverGcmIds = getGcmIds(receiver)
         val notification = FriendNotification(
                 newUser.facebookId,
@@ -70,7 +70,7 @@ public class GcmMessageServiceImpl : GcmMessageService {
 
     }
 
-    private fun getGcmIds(receiver: UsersEntity): List<String> {
+    private fun getGcmIds(receiver: User): List<String> {
         return receiver.devices.map { it.gcmId }
     }
 }

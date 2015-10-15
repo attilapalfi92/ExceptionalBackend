@@ -1,6 +1,6 @@
 package com.attilapalf.exceptional.messages;
 
-import com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity;
+import com.attilapalf.exceptional.entities.BeingVotedExceptionType;
 
 /**
  * Created by palfi on 2015-09-06.
@@ -17,7 +17,7 @@ public class SubmitResponse {
         this.submittedThisWeek = submittedThisWeek;
     }
 
-    public SubmitResponse( BeingVotedExceptionTypeEntity exceptionType, boolean submittedThisWeek ) {
+    public SubmitResponse( BeingVotedExceptionType exceptionType, boolean submittedThisWeek ) {
         this.submittedType = new ExceptionTypeWrapper( exceptionType );
         this.submittedThisWeek = submittedThisWeek;
     }

@@ -9,18 +9,18 @@ import java.util.List;
  */
 @Entity
 @Table(name = "users", schema = "", catalog = "exceptional")
-public class UsersEntity {
+public class User {
     private BigInteger dbId;
     private BigInteger facebookId;
     private int points;
     private String firstName;
     private String lastName;
-    private List<DevicesEntity> devices;
-    private BeingVotedExceptionTypeEntity votedForException;
-    private List<ExceptionTypesEntity> MyWinnerExceptions;
-    private List<ExceptionInstancesEntity> sentByMe;
-    private List<ExceptionInstancesEntity> sentToMe;
-    private BeingVotedExceptionTypeEntity MySubmissionForVote;
+    private List<Device> devices;
+    private BeingVotedExceptionType votedForException;
+    private List<ExceptionType> MyWinnerExceptions;
+    private List<ExceptionInstance> sentByMe;
+    private List<ExceptionInstance> sentToMe;
+    private BeingVotedExceptionType MySubmissionForVote;
 
     @Id
     @Column(name = "facebook_id", columnDefinition = "BIGINT(255)")
@@ -78,7 +78,7 @@ public class UsersEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UsersEntity that = (UsersEntity) o;
+        User that = (User) o;
 
         if (points != that.points) return false;
         if (dbId != null ? !dbId.equals(that.dbId) : that.dbId != null) return false;
@@ -100,57 +100,57 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
-    public List<DevicesEntity> getDevices() {
+    public List<Device> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<DevicesEntity> devices) {
+    public void setDevices(List<Device> devices) {
         this.devices = devices;
     }
 
     @ManyToOne
     @JoinColumn(name = "voted_for_exception", referencedColumnName = "id")
-    public BeingVotedExceptionTypeEntity getVotedForException() {
+    public BeingVotedExceptionType getVotedForException() {
         return votedForException;
     }
 
-    public void setVotedForException(BeingVotedExceptionTypeEntity votedForException) {
+    public void setVotedForException(BeingVotedExceptionType votedForException) {
         this.votedForException = votedForException;
     }
 
     @OneToMany(mappedBy = "submittedBy")
-    public List<ExceptionTypesEntity> getMyWinnerExceptions() {
+    public List<ExceptionType> getMyWinnerExceptions() {
         return MyWinnerExceptions;
     }
 
-    public void setMyWinnerExceptions(List<ExceptionTypesEntity> myWinnerExceptions) {
+    public void setMyWinnerExceptions(List<ExceptionType> myWinnerExceptions) {
         MyWinnerExceptions = myWinnerExceptions;
     }
 
     @OneToMany(mappedBy = "fromUser")
-    public List<ExceptionInstancesEntity> getSentByMe() {
+    public List<ExceptionInstance> getSentByMe() {
         return sentByMe;
     }
 
-    public void setSentByMe(List<ExceptionInstancesEntity> sentByMe) {
+    public void setSentByMe(List<ExceptionInstance> sentByMe) {
         this.sentByMe = sentByMe;
     }
 
     @OneToMany(mappedBy = "toUser")
-    public List<ExceptionInstancesEntity> getSentToMe() {
+    public List<ExceptionInstance> getSentToMe() {
         return sentToMe;
     }
 
-    public void setSentToMe(List<ExceptionInstancesEntity> sentToMe) {
+    public void setSentToMe(List<ExceptionInstance> sentToMe) {
         this.sentToMe = sentToMe;
     }
 
     @OneToOne(mappedBy = "submittedBy")
-    public BeingVotedExceptionTypeEntity getMySubmissionForVote() {
+    public BeingVotedExceptionType getMySubmissionForVote() {
         return MySubmissionForVote;
     }
 
-    public void setMySubmissionForVote(BeingVotedExceptionTypeEntity mySubmissionForVote) {
+    public void setMySubmissionForVote(BeingVotedExceptionType mySubmissionForVote) {
         MySubmissionForVote = mySubmissionForVote;
     }
 }

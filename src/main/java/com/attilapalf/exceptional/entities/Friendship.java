@@ -8,15 +8,15 @@ import java.math.BigInteger;
  */
 @Entity
 @Table(name = "friendships", schema = "", catalog = "exceptional")
-public class FriendshipsEntity {
+public class Friendship {
     private BigInteger friendshipId;
-    private UsersEntity user1;
-    private UsersEntity user2;
+    private User user1;
+    private User user2;
 
-    public FriendshipsEntity() {
+    public Friendship( ) {
     }
 
-    public FriendshipsEntity(UsersEntity user, UsersEntity friend) {
+    public Friendship( User user, User friend ) {
         user1 = user;
         user2 = friend;
     }
@@ -37,7 +37,7 @@ public class FriendshipsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FriendshipsEntity that = (FriendshipsEntity) o;
+        Friendship that = (Friendship) o;
 
         if (friendshipId != null ? !friendshipId.equals(that.friendshipId) : that.friendshipId != null) return false;
 
@@ -51,21 +51,21 @@ public class FriendshipsEntity {
 
     @OneToOne
     @JoinColumn(name = "user_fb_id_1", referencedColumnName = "facebook_id", nullable = false)
-    public UsersEntity getUser1() {
+    public User getUser1() {
         return user1;
     }
 
-    public void setUser1(UsersEntity fromUser) {
+    public void setUser1(User fromUser) {
         this.user1 = fromUser;
     }
 
     @OneToOne
     @JoinColumn(name = "user_fb_id_2", referencedColumnName = "facebook_id", nullable = false)
-    public UsersEntity getUser2() {
+    public User getUser2() {
         return user2;
     }
 
-    public void setUser2(UsersEntity toUser) {
+    public void setUser2(User toUser) {
         this.user2 = toUser;
     }
 }

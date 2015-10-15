@@ -8,7 +8,7 @@ import java.math.BigInteger;
  */
 @Entity
 @Table(name = "constants", schema = "", catalog = "exceptional")
-public class ConstantsEntity {
+public class Constant {
     private int id;
     private String constantName;
     private BigInteger intValue;
@@ -60,7 +60,7 @@ public class ConstantsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ConstantsEntity that = (ConstantsEntity) o;
+        Constant that = (Constant) o;
 
         if (id != that.id) return false;
         if (constantName != null ? !constantName.equals(that.constantName) : that.constantName != null) return false;

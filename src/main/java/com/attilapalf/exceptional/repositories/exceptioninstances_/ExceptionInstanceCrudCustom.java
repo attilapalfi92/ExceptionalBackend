@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.repositories.exceptioninstances_;
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.ExceptionInstance;
+import com.attilapalf.exceptional.entities.User;
 import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 
 import java.math.BigInteger;
@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface ExceptionInstanceCrudCustom {
 
-    List<ExceptionInstancesEntity> findLastExceptionsForUser(UsersEntity user);
+    List<ExceptionInstance> findLastExceptionsForUser(User user);
 
-    List<ExceptionInstancesEntity> findLastExceptionsNotAmongIds(UsersEntity user, List<BigInteger> knownIds);
+    List<ExceptionInstance> findLastExceptionsNotAmongIds(User user, List<BigInteger> knownIds);
 
-    ExceptionInstancesEntity saveNewException(ExceptionInstanceWrapper exceptionInstanceWrapper);
+    ExceptionInstance saveNewException(ExceptionInstanceWrapper exceptionInstanceWrapper);
 }

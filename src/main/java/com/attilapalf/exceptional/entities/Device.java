@@ -7,11 +7,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "devices", schema = "", catalog = "exceptional")
-public class DevicesEntity {
+public class Device {
     private String deviceId;
     private String deviceName;
     private String gcmId;
-    private UsersEntity user;
+    private User user;
 
     @Id
     @Column(name = "device_id")
@@ -48,7 +48,7 @@ public class DevicesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DevicesEntity that = (DevicesEntity) o;
+        Device that = (Device) o;
 
         if (deviceId != null ? !deviceId.equals(that.deviceId) : that.deviceId != null) return false;
         if (deviceName != null ? !deviceName.equals(that.deviceName) : that.deviceName != null) return false;
@@ -67,11 +67,11 @@ public class DevicesEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_fb_id", referencedColumnName = "facebook_id")
-    public UsersEntity getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UsersEntity users) {
+    public void setUser(User users) {
         this.user = users;
     }
 }

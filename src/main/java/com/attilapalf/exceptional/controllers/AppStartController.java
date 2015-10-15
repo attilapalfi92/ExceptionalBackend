@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.controllers;
 
 import com.attilapalf.exceptional.services.AppStartService;
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.User;
 import com.attilapalf.exceptional.repositories.users.UserCrud;
 import com.attilapalf.exceptional.messages.AppStartRequest;
 import com.attilapalf.exceptional.messages.AppStartResponse;
@@ -28,13 +28,13 @@ public class AppStartController {
 
 
     @RequestMapping(value = "/user/byPage/{page}/{size}", method = RequestMethod.GET)
-    public ResponseEntity<Page<UsersEntity>> getAll(@PathVariable int page, @PathVariable int size) {
+    public ResponseEntity<Page<User>> getAll(@PathVariable int page, @PathVariable int size) {
         return new ResponseEntity<>(userCrud.findAll(new PageRequest(page, size)), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/user/byId/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<UsersEntity> getById(@PathVariable BigInteger userId) {
+    public ResponseEntity<User> getById(@PathVariable BigInteger userId) {
         return new ResponseEntity<>(userCrud.findOne(userId), HttpStatus.OK);
     }
 

@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.repositories.friendships;
 
-import com.attilapalf.exceptional.entities.FriendshipsEntity;
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.Friendship;
+import com.attilapalf.exceptional.entities.User;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.List;
  * Created by palfi on 2015-08-20.
  */
 public interface FriendshipCrudCustom {
-    List<FriendshipsEntity> findMyFriends(UsersEntity user);
+    List<Friendship> findMyFriends(User user);
 
-    int deleteFriendships(UsersEntity user, List<BigInteger> friends);
+    int deleteFriendships(User user, List<BigInteger> friends);
 
-    int saveFriendships(UsersEntity user, List<UsersEntity> friends);
+    int saveFriendships(User user, List<User> friends);
 
-    List<UsersEntity> findUsersExistingFriends(UsersEntity user);
+    List<User> findUsersExistingFriends(User user);
 }

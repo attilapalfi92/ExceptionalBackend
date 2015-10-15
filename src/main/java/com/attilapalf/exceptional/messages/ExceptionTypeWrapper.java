@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.messages;
 
-import com.attilapalf.exceptional.entities.BeingVotedExceptionTypeEntity;
-import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
+import com.attilapalf.exceptional.entities.BeingVotedExceptionType;
+import com.attilapalf.exceptional.entities.ExceptionType;
 
 /**
  * Created by palfi on 2015-08-20.
@@ -31,20 +31,20 @@ public class ExceptionTypeWrapper {
         this.voteCount = voteCount;
     }
 
-    public ExceptionTypeWrapper(ExceptionTypesEntity exceptionTypesEntity) {
-        id = exceptionTypesEntity.getId();
-        version = exceptionTypesEntity.getVersion();
-        shortName = exceptionTypesEntity.getShortName();
-        prefix = exceptionTypesEntity.getPrefix();
-        description = exceptionTypesEntity.getDescription();
-        type = exceptionTypesEntity.getType();
-        if (exceptionTypesEntity.getSubmittedBy() != null) {
-            submitter = new Submitter(exceptionTypesEntity.getSubmittedBy().getFirstName(),
-                    exceptionTypesEntity.getSubmittedBy().getLastName());
+    public ExceptionTypeWrapper(ExceptionType exceptionType ) {
+        id = exceptionType.getId();
+        version = exceptionType.getVersion();
+        shortName = exceptionType.getShortName();
+        prefix = exceptionType.getPrefix();
+        description = exceptionType.getDescription();
+        type = exceptionType.getType();
+        if ( exceptionType.getSubmittedBy() != null) {
+            submitter = new Submitter( exceptionType.getSubmittedBy().getFirstName(),
+                    exceptionType.getSubmittedBy().getLastName());
         }
     }
 
-    public ExceptionTypeWrapper(BeingVotedExceptionTypeEntity exception) {
+    public ExceptionTypeWrapper(BeingVotedExceptionType exception) {
         id = exception.getId();
         version = exception.getVersion();
         shortName = exception.getShortName();

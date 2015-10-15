@@ -1,7 +1,7 @@
 package com.attilapalf.exceptional.services
 
-import com.attilapalf.exceptional.entities.DevicesEntity
-import com.attilapalf.exceptional.entities.UsersEntity
+import com.attilapalf.exceptional.entities.Device
+import com.attilapalf.exceptional.entities.User
 import com.attilapalf.exceptional.messages.AppStartRequest
 import com.attilapalf.exceptional.messages.AppStartResponse
 import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper
@@ -48,7 +48,7 @@ public class AppStartServiceImpl : AppStartService {
 
     @Transactional
     override public fun firstAppStart(requestBody: AppStartRequest): AppStartResponse {
-        var user: UsersEntity? = userCrud.findOne(requestBody.userFacebookId)
+        var user: User? = userCrud.findOne(requestBody.userFacebookId)
         if (user == null) {
             user = saveNewUser(requestBody)
         }
@@ -65,20 +65,20 @@ public class AppStartServiceImpl : AppStartService {
         return createResponseForRegularAppStart(requestBody, user)
     }
 
-    private fun saveNewUser(requestBody: AppStartRequest): UsersEntity {
-        val user = UsersEntity()
+    private fun saveNewUser(requestBody: AppStartRequest): User {
+        val user = User()
         user.facebookId = requestBody.userFacebookId
         user.points = constantCrud.startingPoint
         return updateUserName(requestBody, user)
     }
 
-    private fun updateUserName(requestBody: AppStartRequest, user: UsersEntity): UsersEntity {
+    private fun updateUserName(requestBody: AppStartRequest, user: User): User {
         user.firstName = requestBody.firstName
         user.lastName = requestBody.lastName
         return userCrud.save(user)
     }
 
-    private fun handleUserFirstStart(requestBody: AppStartRequest, user: UsersEntity): AppStartResponse {
+    private fun handleUserFirstStart(requestBody: AppStartRequest, user: User): AppStartResponse {
         saveDeviceForUser(requestBody, user)
         removeInvalidFriendships(requestBody, user)
         val friends = saveNewFriends(requestBody, user)
@@ -86,27 +86,27 @@ public class AppStartServiceImpl : AppStartService {
         return createResponseForFirstAppStart(user)
     }
 
-    private fun removeInvalidFriendships(requestBody: AppStartRequest, user: UsersEntity) {
+    private fun removeInvalidFriendships(requestBody: AppStartRequest, user: User) {
         val existingFriends = friendshipCrud.findUsersExistingFriends(user)
         val existingFriendIds = existingFriends.map { it.facebookId } as MutableList
         existingFriendIds.removeAll(requestBody.friendsFacebookIds)
         friendshipCrud.deleteFriendships(user, existingFriendIds)
     }
 
-    private fun saveNewFriends(requestBody: AppStartRequest, user: UsersEntity): List<UsersEntity> {
+    private fun saveNewFriends(requestBody: AppStartRequest, user: User): List<User> {
         val currentValidFriendIds = requestBody.friendsFacebookIds
         userCrud.saveUsersIfNew(currentValidFriendIds)
         return saveNewFriendships(user, currentValidFriendIds)
     }
 
-    private fun createResponseForFirstAppStart(user: UsersEntity): AppStartResponse {
+    private fun createResponseForFirstAppStart(user: User): AppStartResponse {
         val responseBody = initResponseWithExceptions(user)
         addExceptionTypesToResponse(responseBody)
         addCommonDataToResponse(user, responseBody)
         return responseBody
     }
 
-    private fun saveNewFriendships(user: UsersEntity, currentValidFriendIds: MutableList<BigInteger>): List<UsersEntity> {
+    private fun saveNewFriendships(user: User, currentValidFriendIds: MutableList<BigInteger>): List<User> {
         val existingFriends = friendshipCrud.findUsersExistingFriends(user)
         val existingFriendIds = existingFriends.map { it.facebookId }
         currentValidFriendIds.removeAll(existingFriendIds)
@@ -114,7 +114,7 @@ public class AppStartServiceImpl : AppStartService {
         return existingFriends
     }
 
-    private fun initResponseWithExceptions(user: UsersEntity): AppStartResponse {
+    private fun initResponseWithExceptions(user: User): AppStartResponse {
         val exceptions = exceptionInstanceCrud.findLastExceptionsForUser(user)
         val responseBody = AppStartResponse()
         responseBody.myExceptions = exceptions.map { ExceptionInstanceWrapper(it) }
@@ -128,19 +128,19 @@ public class AppStartServiceImpl : AppStartService {
         responseBody.exceptionVersion = constantCrud.exceptionVersion
     }
 
-    private fun addCommonDataToResponse(user: UsersEntity, responseBody: AppStartResponse) {
+    private fun addCommonDataToResponse(user: User, responseBody: AppStartResponse) {
         addVotedExceptionsToResponse(responseBody)
         addVoteMetadataToResponse(user, responseBody)
         addFriendsPointsToResponse(responseBody, user)
         responseBody.points = user.points
     }
 
-    private fun addFriendsPointsToResponse(responseBody: AppStartResponse, user: UsersEntity) {
+    private fun addFriendsPointsToResponse(responseBody: AppStartResponse, user: User) {
         val friends = friendshipCrud.findUsersExistingFriends(user)
         responseBody.friendsPoints = friends.toMap({ it.facebookId }, { it.points })
     }
 
-    private fun addVoteMetadataToResponse(user: UsersEntity, responseBody: AppStartResponse) {
+    private fun addVoteMetadataToResponse(user: User, responseBody: AppStartResponse) {
         responseBody.votedThisWeek = user.votedForException != null
         responseBody.submittedThisWeek = user.mySubmissionForVote != null
     }
@@ -151,16 +151,16 @@ public class AppStartServiceImpl : AppStartService {
         responseBody.beingVotedTypes = typeWrapperList
     }
 
-    private fun saveDeviceForUser(requestBody: AppStartRequest, user: UsersEntity) {
-        var device: DevicesEntity? = deviceCrud.findOne(requestBody.deviceId)
+    private fun saveDeviceForUser(requestBody: AppStartRequest, user: User) {
+        var device: Device? = deviceCrud.findOne(requestBody.deviceId)
         if (device == null) {
             device = saveNewDevice(requestBody, user)
         }
         saveUserWithDevice(user, device)
     }
 
-    private fun saveNewDevice(requestBody: AppStartRequest, user: UsersEntity): DevicesEntity {
-        val device = DevicesEntity()
+    private fun saveNewDevice(requestBody: AppStartRequest, user: User): Device {
+        val device = Device()
         device.deviceId = requestBody.deviceId
         device.user = user
         device.gcmId = requestBody.gcmId
@@ -168,22 +168,22 @@ public class AppStartServiceImpl : AppStartService {
         return deviceCrud.save(device)
     }
 
-    private fun saveUserWithDevice(user: UsersEntity, device: DevicesEntity) {
+    private fun saveUserWithDevice(user: User, device: Device) {
         if (user.devices == null) {
-            user.devices = ArrayList<DevicesEntity>()
+            user.devices = ArrayList<Device>()
         }
         user.devices.add(device)
         userCrud.save(user)
     }
 
-    private fun createResponseForRegularAppStart(requestBody: AppStartRequest, user: UsersEntity): AppStartResponse {
+    private fun createResponseForRegularAppStart(requestBody: AppStartRequest, user: User): AppStartResponse {
         val responseBody = initResponseWithFreshExceptions(requestBody, user)
         addFreshExceptionTypesToResponse(requestBody, responseBody)
         addCommonDataToResponse(user, responseBody)
         return responseBody
     }
 
-    private fun initResponseWithFreshExceptions(requestBody: AppStartRequest, user: UsersEntity): AppStartResponse {
+    private fun initResponseWithFreshExceptions(requestBody: AppStartRequest, user: User): AppStartResponse {
         val exceptions = exceptionInstanceCrud.findLastExceptionsNotAmongIds(user, requestBody.knownExceptionIds)
         val response = AppStartResponse()
         response.myExceptions = exceptions.map { ExceptionInstanceWrapper(it) }

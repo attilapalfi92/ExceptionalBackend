@@ -8,15 +8,15 @@ import java.util.List;
  */
 @Entity
 @Table(name = "exception_types", schema = "", catalog = "exceptional")
-public class ExceptionTypesEntity {
+public class ExceptionType {
     private int id;
     private String shortName;
     private String prefix;
     private String description;
     private int version;
     private String type;
-    private UsersEntity submittedBy;
-    private List<ExceptionInstancesEntity> instances;
+    private User submittedBy;
+    private List<ExceptionInstance> instances;
 
     @Id
     @GeneratedValue
@@ -84,7 +84,7 @@ public class ExceptionTypesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ExceptionTypesEntity that = (ExceptionTypesEntity) o;
+        ExceptionType that = (ExceptionType) o;
 
         if (id != that.id) return false;
         if (version != that.version) return false;
@@ -109,20 +109,20 @@ public class ExceptionTypesEntity {
 
     @ManyToOne
     @JoinColumn(name = "submitted_by_fb_id", referencedColumnName = "facebook_id")
-    public UsersEntity getSubmittedBy() {
+    public User getSubmittedBy() {
         return submittedBy;
     }
 
-    public void setSubmittedBy(UsersEntity submittedBy) {
+    public void setSubmittedBy(User submittedBy) {
         this.submittedBy = submittedBy;
     }
 
     @OneToMany(mappedBy = "type")
-    public List<ExceptionInstancesEntity> getInstances() {
+    public List<ExceptionInstance> getInstances() {
         return instances;
     }
 
-    public void setInstances(List<ExceptionInstancesEntity> instances) {
+    public void setInstances(List<ExceptionInstance> instances) {
         this.instances = instances;
     }
 }

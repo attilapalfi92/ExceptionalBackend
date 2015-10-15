@@ -10,9 +10,9 @@ import javax.persistence.PersistenceContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.attilapalf.exceptional.entities.ExceptionInstancesEntity;
-import com.attilapalf.exceptional.entities.ExceptionTypesEntity;
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.ExceptionInstance;
+import com.attilapalf.exceptional.entities.ExceptionType;
+import com.attilapalf.exceptional.entities.User;
 import com.attilapalf.exceptional.messages.ExceptionInstanceWrapper;
 import com.attilapalf.exceptional.repositories.constants.ConstantCrud;
 import com.attilapalfi.exceptional.model.Question;
@@ -27,12 +27,12 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
     private ConstantCrud constantCrud;
 
     @Override
-    public List<ExceptionInstancesEntity> findLastExceptionsForUser( UsersEntity user ) {
-        List<ExceptionInstancesEntity> result = em.createQuery(
-                "SELECT e FROM ExceptionInstancesEntity e " +
+    public List<ExceptionInstance> findLastExceptionsForUser( User user ) {
+        List<ExceptionInstance> result = em.createQuery(
+                "SELECT e FROM ExceptionInstance e " +
                         "WHERE e.toUser = :user OR e.fromUser = :user " +
                         "ORDER BY e.id DESC",
-                ExceptionInstancesEntity.class )
+                ExceptionInstance.class )
                 .setParameter( "user", user )
                 .setMaxResults( constantCrud.getClientCacheSize() )
                 .getResultList();
@@ -41,16 +41,16 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
     }
 
     @Override
-    public List<ExceptionInstancesEntity> findLastExceptionsNotAmongIds( UsersEntity user, List<BigInteger> knownIds ) {
+    public List<ExceptionInstance> findLastExceptionsNotAmongIds( User user, List<BigInteger> knownIds ) {
         if ( knownIds.isEmpty() ) {
             knownIds.add( new BigInteger( "0" ) );
         }
-        List<ExceptionInstancesEntity> result = em.createQuery(
-                "SELECT e FROM ExceptionInstancesEntity e " +
+        List<ExceptionInstance> result = em.createQuery(
+                "SELECT e FROM ExceptionInstance e " +
                         "WHERE (e.toUser = :user OR e.fromUser = :user) " +
                         "AND e.id NOT IN :idList " +
                         "ORDER BY e.id DESC",
-                ExceptionInstancesEntity.class )
+                ExceptionInstance.class )
                 .setParameter( "user", user )
                 .setParameter( "idList", knownIds )
                 .setMaxResults( constantCrud.getClientCacheSize() - knownIds.size() )
@@ -60,26 +60,28 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
     }
 
     @Override
-    public ExceptionInstancesEntity saveNewException( ExceptionInstanceWrapper instanceWrapper ) {
-        ExceptionInstancesEntity exception = buildExceptionInstance( instanceWrapper );
+    public ExceptionInstance saveNewException( ExceptionInstanceWrapper instanceWrapper ) {
+        ExceptionInstance exception = buildExceptionInstance( instanceWrapper );
         em.persist( exception );
         return exception;
     }
 
     @NotNull
-    private ExceptionInstancesEntity buildExceptionInstance( ExceptionInstanceWrapper instanceWrapper ) {
-        ExceptionInstancesEntity exception = new ExceptionInstancesEntity();
+    private ExceptionInstance buildExceptionInstance( ExceptionInstanceWrapper instanceWrapper ) {
+        ExceptionInstance exception = new ExceptionInstance();
         exception.setDateTime( new Timestamp( instanceWrapper.getTimeInMillis() ) );
-        exception.setType( em.getReference( ExceptionTypesEntity.class, instanceWrapper.getExceptionTypeId() ) );
-        exception.setFromUser( em.getReference( UsersEntity.class, instanceWrapper.getFromWho() ) );
-        exception.setToUser( em.getReference( UsersEntity.class, instanceWrapper.getToWho() ) );
+        exception.setType( em.getReference( ExceptionType.class, instanceWrapper.getExceptionTypeId() ) );
+        exception.setFromUser( em.getReference( User.class, instanceWrapper.getFromWho() ) );
+        exception.setToUser( em.getReference( User.class, instanceWrapper.getToWho() ) );
         exception.setLatitude( instanceWrapper.getLatitude() );
         exception.setLongitude( instanceWrapper.getLongitude() );
+        exception.setPointsForSender( instanceWrapper.getPointsForSender() );
+        exception.setPointsForReceiver( instanceWrapper.getPointsForReceiver() );
         setQuestionForException( instanceWrapper, exception );
         return exception;
     }
 
-    private void setQuestionForException( ExceptionInstanceWrapper instanceWrapper, ExceptionInstancesEntity exception ) {
+    private void setQuestionForException( ExceptionInstanceWrapper instanceWrapper, ExceptionInstance exception ) {
         Question question = instanceWrapper.getQuestion();
         exception.setQuestionText( question.getHasQuestion() ? question.getText() : null );
         exception.setAnswered( false );

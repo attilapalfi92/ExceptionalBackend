@@ -1,9 +1,8 @@
 package com.attilapalf.exceptional.repositories.users;
 
-import com.attilapalf.exceptional.entities.UsersEntity;
+import com.attilapalf.exceptional.entities.User;
 
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public interface UserCrudCustom {
 
-    List<UsersEntity> userIdsToUsersEntities(List<BigInteger> facebookFriends);
+    List<User> userIdsToUsersEntities(List<BigInteger> facebookFriends);
 
     void saveIfNew(BigInteger facebookId);
 
@@ -19,5 +18,5 @@ public interface UserCrudCustom {
 
     BigInteger getExceptionStartId(BigInteger userId);
 
-    BigInteger getExceptionStartId(UsersEntity user);
+    BigInteger getExceptionStartId(User user);
 }
