@@ -1,7 +1,8 @@
 package com.attilapalf.exceptional.controllers
 
+import com.attilapalf.exceptional.entities.ExceptionInstance
+import com.attilapalf.exceptional.messages.notifications.AnswerNotification
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud
-import com.attilapalf.exceptional.repositories.users.UserCrud
 import com.attilapalf.exceptional.services.VotingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -23,7 +24,7 @@ public class TestController {
     @RequestMapping("/test/resetVoting")
     fun resetVoting(): ResponseEntity<String> {
         votingService.resetVoting()
-        return ResponseEntity.ok( "Reset successfully." );
+        return ResponseEntity.ok("Reset successfully.");
     }
 
     @RequestMapping("/test/answered")
@@ -34,4 +35,8 @@ public class TestController {
         return ResponseEntity("Exception answered set to ${exception.isAnswered}.", HttpStatus.OK)
     }
 
+    @RequestMapping("/test/answerNotification")
+    fun testAnswerNotification(): ResponseEntity<AnswerNotification> {
+        return ResponseEntity(AnswerNotification(listOf("hurka_gcm_id"), ExceptionInstance()), HttpStatus.OK);
+    }
 }

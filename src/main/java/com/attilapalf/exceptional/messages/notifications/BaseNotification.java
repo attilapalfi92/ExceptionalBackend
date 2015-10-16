@@ -9,6 +9,13 @@ public abstract class BaseNotification {
 
     protected List<String> registration_ids;
 
+    public BaseNotification( ) {
+    }
+
+    public BaseNotification( List<String> registration_ids ) {
+        this.registration_ids = registration_ids;
+    }
+
     public List<String> getRegistration_ids() {
         return registration_ids;
     }

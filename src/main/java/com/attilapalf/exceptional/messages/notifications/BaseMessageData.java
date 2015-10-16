@@ -6,6 +6,13 @@ package com.attilapalf.exceptional.messages.notifications;
 public abstract class BaseMessageData {
     protected String notificationType;
 
+    public BaseMessageData( ) {
+    }
+
+    public BaseMessageData( String notificationType ) {
+        this.notificationType = notificationType;
+    }
+
     public String getNotificationType() {
         return notificationType;
     }

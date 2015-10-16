@@ -3,6 +3,7 @@ package com.attilapalf.exceptional.services
 import com.attilapalf.exceptional.entities.ExceptionInstance
 import com.attilapalf.exceptional.entities.User
 import com.attilapalf.exceptional.messages.*
+import com.attilapalf.exceptional.messages.notifications.AnswerNotification
 import com.attilapalf.exceptional.repositories.exceptioninstances_.ExceptionInstanceCrud
 import com.attilapalf.exceptional.repositories.users.UserCrud
 import org.springframework.beans.factory.annotation.Autowired
@@ -82,6 +83,7 @@ public class ExceptionServiceImpl : ExceptionService {
         updatePoints(exception, questionAnswer)
         exception.isAnswered = true
         exceptionCrud.save(exception)
+        gcmMessageService.sendAnswerNotification(exception)
         return ExceptionSentResponse(exception.type.shortName, exception.fromUser.points, exception.toUser.points,
                 ExceptionInstanceWrapper(exception))
     }
@@ -94,6 +96,8 @@ public class ExceptionServiceImpl : ExceptionService {
             exception.toUser.points += exception.pointsForReceiver;
         }
     }
+
+
 
     private data class Users(val sender: User, val receiver: User)
 }
