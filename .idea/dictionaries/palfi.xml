@@ -2,6 +2,7 @@
   <dictionary name="palfi">
     <words>
       <w>autodetection</w>
+      <w>datapoint</w>
     </words>
   </dictionary>
 </component>
