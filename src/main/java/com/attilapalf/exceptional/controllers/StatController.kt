@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigInteger
-import java.util.*
 
 /**
  * Created by palfi on 2015-10-21.
@@ -18,12 +16,12 @@ public class StatController {
     private lateinit val globalStatService: GlobalStatService
 
     @RequestMapping("stats/globalPoint")
-    public fun getGlobalPointsStat(): ResponseEntity<LinkedHashMap<BigInteger, Int>> {
+    public fun getGlobalPointsStat(): ResponseEntity<String> {
         return ResponseEntity(globalStatService.globalPointsStat(), HttpStatus.OK)
     }
 
     @RequestMapping("stats/globalThrowCounts")
-    public fun getGlobalThrowCounts(): ResponseEntity<LinkedHashMap<Int, Int>> {
+    public fun getGlobalThrowCounts(): ResponseEntity<String> {
         return ResponseEntity(globalStatService.globalThrowCounts(), HttpStatus.OK)
     }
 }

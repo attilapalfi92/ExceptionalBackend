@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/exceptional"
+    username: "root"
+    password: "root"
+    validationQuery: "SELECT 1"
+    testOnBorrow: "true"
+    driverClassName: "com.mysql.jdbc.Driver"
+spring.jpa.hibernate.ddl-auto: "validate"
+server.port: 8090
+redis:
+    url: "redis://redistogo:2415417dcc099a29a85bfc57f5596007@albacore.redistogo.com:9344/"

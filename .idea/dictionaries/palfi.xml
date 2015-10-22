@@ -3,6 +3,7 @@
     <words>
       <w>autodetection</w>
       <w>datapoint</w>
+      <w>jedis</w>
     </words>
   </dictionary>
 </component>
