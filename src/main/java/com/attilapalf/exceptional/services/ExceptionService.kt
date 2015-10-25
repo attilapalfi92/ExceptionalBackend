@@ -22,11 +22,11 @@ public interface ExceptionService {
 @Service
 public class ExceptionServiceImpl : ExceptionService {
     @Autowired
-    private lateinit val exceptionCrud: ExceptionInstanceCrud
+    private lateinit var exceptionCrud: ExceptionInstanceCrud
     @Autowired
-    private lateinit val userCrud: UserCrud
+    private lateinit var userCrud: UserCrud
     @Autowired
-    private lateinit val gcmMessageService: GcmMessageService
+    private lateinit var gcmMessageService: GcmMessageService
 
 
     @Transactional

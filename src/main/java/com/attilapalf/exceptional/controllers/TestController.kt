@@ -21,13 +21,13 @@ import java.math.BigInteger
 @RestController
 public class TestController {
     @Autowired
-    private lateinit val votingService: VotingService
+    private lateinit var votingService: VotingService
     @Autowired
-    private lateinit val exceptionCrud: ExceptionInstanceCrud
+    private lateinit var exceptionCrud: ExceptionInstanceCrud
     @Autowired
-    private lateinit val userCrud: UserCrud
+    private lateinit var userCrud: UserCrud
     @Autowired
-    private lateinit val deviceCrud: DeviceCrud
+    private lateinit var deviceCrud: DeviceCrud
 
     @RequestMapping("/test/resetVoting")
     fun resetVoting(): ResponseEntity<String> {

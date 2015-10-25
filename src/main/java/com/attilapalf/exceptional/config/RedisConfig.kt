@@ -14,7 +14,7 @@ import java.net.URI
 @Configuration
 public open class RedisConfig {
     @Autowired
-    private lateinit val redisProperties: RedisConfigProperties
+    private lateinit var redisProperties: RedisConfigProperties
 
     @Bean
     public open fun jedisPool(): JedisPool {

@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController
 public class ExceptionController {
 
     @Autowired
-    private lateinit val exceptionService: ExceptionService
+    private lateinit var exceptionService: ExceptionService
 
     @RequestMapping(value = "/exception", method = arrayOf(RequestMethod.POST))
     fun throwException(@RequestBody wrapper: ExceptionInstanceWrapper): ResponseEntity<ExceptionSentResponse> {
         val question = wrapper.question
-        if (question.text != null && question.text.length() > 100) {
+        if (question.text != null && question.text.length > 100) {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
         return ResponseEntity(exceptionService.throwException(wrapper), HttpStatus.OK)

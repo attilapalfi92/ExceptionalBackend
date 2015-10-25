@@ -30,21 +30,21 @@ public interface AppStartService {
 @Service
 public class AppStartServiceImpl : AppStartService {
     @Autowired
-    private lateinit val userCrud: UserCrud
+    private lateinit var userCrud: UserCrud
     @Autowired
-    private lateinit val deviceCrud: DeviceCrud
+    private lateinit var deviceCrud: DeviceCrud
     @Autowired
-    private lateinit val exceptionInstanceCrud: ExceptionInstanceCrud
+    private lateinit var exceptionInstanceCrud: ExceptionInstanceCrud
     @Autowired
-    private lateinit val constantCrud: ConstantCrud
+    private lateinit var constantCrud: ConstantCrud
     @Autowired
-    private lateinit val friendshipCrud: FriendshipCrud
+    private lateinit var friendshipCrud: FriendshipCrud
     @Autowired
-    private lateinit val exceptionTypeCrud: ExceptionTypeCrud
+    private lateinit var exceptionTypeCrud: ExceptionTypeCrud
     @Autowired
-    private lateinit val beingVotedCrud: BeingVotedCrud
+    private lateinit var beingVotedCrud: BeingVotedCrud
     @Autowired
-    private lateinit val gcmMessageService: GcmMessageService
+    private lateinit var gcmMessageService: GcmMessageService
 
     @Transactional
     override public fun firstAppStart(requestBody: AppStartRequest): AppStartResponse {

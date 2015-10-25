@@ -26,13 +26,13 @@ private val DATAPOINT_NUMBER = 100
 @Service
 public class GlobalStatServiceImpl : GlobalStatService {
     @Autowired
-    private lateinit val userCrud: UserCrud
+    private lateinit var userCrud: UserCrud
     @Autowired
-    private lateinit val exceptionInstanceCrud: ExceptionInstanceCrud
+    private lateinit var exceptionInstanceCrud: ExceptionInstanceCrud
     @Autowired
-    private lateinit val exceptionTypeCrud: ExceptionTypeCrud
+    private lateinit var exceptionTypeCrud: ExceptionTypeCrud
     @Autowired
-    private lateinit val jedisPool: JedisPool
+    private lateinit var jedisPool: JedisPool
     private val objectMapper = ObjectMapper()
     private val POINT_STATS = "POINT_STATS"
     private val THROW_COUNT = "THROW_COUNT"
@@ -91,13 +91,19 @@ public class GlobalStatServiceImpl : GlobalStatService {
 
     @Scheduled(fixedRate = 1000 * 60 * 5)
     private fun recalculateThrowCounts() {
-        val globalThrowCounts = LinkedHashMap<Int, Int>()
+        val globalThrowCounts = unorderedThrowCountsList()
+        val resultMap = globalThrowCounts.sortedByDescending { it.second }.toMap({ it.first }, { it.second })
+        putToJedis(THROW_COUNT, objectMapper.writeValueAsString(resultMap))
+    }
+
+    private fun unorderedThrowCountsList(): LinkedList<Pair<Int, Int>> {
+        val globalThrowCounts = LinkedList<Pair<Int, Int>>()
         val instances = exceptionInstanceCrud.findAll()
         exceptionTypeCrud.findAll().forEach {
             type ->
-            globalThrowCounts.put(type.id, instances.count { it.type.equals(type) })
+            globalThrowCounts.add(Pair(type.id, instances.count { it.type.equals(type) }))
         }
-        putToJedis(THROW_COUNT, objectMapper.writeValueAsString(globalThrowCounts))
+        return globalThrowCounts
     }
 
     private fun putToJedis(key: String, value: String) {

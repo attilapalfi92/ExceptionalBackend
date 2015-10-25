@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 public class StatController {
     @Autowired
-    private lateinit val globalStatService: GlobalStatService
+    private lateinit var globalStatService: GlobalStatService
 
     @RequestMapping("stats/globalPoint")
     public fun getGlobalPointsStat(): ResponseEntity<String> {
