@@ -16,6 +16,7 @@ public data class ExceptionInstanceWrapper(var fromWho: BigInteger = BigInteger(
                                            var instanceId: BigInteger = BigInteger("0"),
                                            var pointsForSender: Int = 25,
                                            var pointsForReceiver: Int = -20,
+                                           var city: String = "unknown",
                                            var question: Question = Question()) {
     constructor(e: ExceptionInstance) : this(
             fromWho = e.fromUser.facebookId,
@@ -27,6 +28,7 @@ public data class ExceptionInstanceWrapper(var fromWho: BigInteger = BigInteger(
             instanceId = e.id,
             pointsForSender = e.pointsForSender,
             pointsForReceiver = e.pointsForReceiver,
+            city = e.city,
             question = Question(
                     text = e.questionText,
                     yesIsCorrect = e.isYesIsCorrect,

@@ -86,6 +86,7 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
         exception.setLongitude( instanceWrapper.getLongitude() );
         exception.setPointsForSender( instanceWrapper.getPointsForSender() );
         exception.setPointsForReceiver( instanceWrapper.getPointsForReceiver() );
+        exception.setCity( instanceWrapper.getCity() );
         setQuestionForException( instanceWrapper, exception );
         return exception;
     }

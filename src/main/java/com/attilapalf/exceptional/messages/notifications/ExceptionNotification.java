@@ -28,6 +28,7 @@ public class ExceptionNotification extends BaseNotification {
         data.setFriendPoints( friendPoints );
         data.setExceptionPointsForSender( exception.getPointsForSender() );
         data.setExceptionPointsForReceiver( exception.getPointsForReceiver() );
+        data.setCity( exception.getCity() );
         data.setQuestionText( question.getText() );
         data.setHasQuestion( question.getHasQuestion() );
         data.setYesIsCorrect( question.getYesIsCorrect() );
@@ -48,6 +49,7 @@ public class ExceptionNotification extends BaseNotification {
         private boolean hasQuestion;
         private int exceptionPointsForSender;
         private int exceptionPointsForReceiver;
+        private String city;
 
         public Data( ) {
             notificationType = "exception";
@@ -167,6 +169,14 @@ public class ExceptionNotification extends BaseNotification {
 
         public void setExceptionPointsForReceiver( int exceptionPointsForReceiver ) {
             this.exceptionPointsForReceiver = exceptionPointsForReceiver;
+        }
+
+        public String getCity( ) {
+            return city;
+        }
+
+        public void setCity( String city ) {
+            this.city = city;
         }
     }
 

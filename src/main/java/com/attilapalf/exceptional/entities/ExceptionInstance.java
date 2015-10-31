@@ -25,6 +25,7 @@ public class ExceptionInstance {
     private boolean answeredCorrectly;
     private int pointsForSender;
     private int pointsForReceiver;
+    private String city;
 
     @Id
     @GeneratedValue
@@ -135,6 +136,16 @@ public class ExceptionInstance {
 
     public void setPointsForReceiver( int pointsForReceiver ) {
         this.pointsForReceiver = pointsForReceiver;
+    }
+
+    @Basic
+    @Column( name = "city", columnDefinition = "VARCHAR(50)" )
+    public String getCity( ) {
+        return city;
+    }
+
+    public void setCity( String city ) {
+        this.city = city;
     }
 
     @Override
