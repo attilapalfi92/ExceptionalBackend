@@ -15,7 +15,7 @@ public class StatController {
     @Autowired
     private lateinit var globalStatService: GlobalStatService
 
-    @RequestMapping("stats/globalPoint")
+    @RequestMapping("stats/globalPoints")
     public fun getGlobalPointsStat(): ResponseEntity<String> {
         return ResponseEntity(globalStatService.globalPointsStat(), HttpStatus.OK)
     }

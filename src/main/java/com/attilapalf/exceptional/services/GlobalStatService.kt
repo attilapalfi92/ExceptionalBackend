@@ -73,8 +73,8 @@ public class GlobalStatServiceImpl : GlobalStatService {
     }
 
     private fun putSelectedUsers(allUsers: MutableList<User>, globalPointStatistics: LinkedHashMap<BigInteger, Int>) {
-        val lowestUser = allUsers.get(0)
-        val highestUser = allUsers.get(allUsers.lastIndex)
+        val lowestUser = allUsers[0]
+        val highestUser = allUsers[allUsers.lastIndex]
         globalPointStatistics.put(lowestUser.facebookId, lowestUser.points)
         putMiddleOnes(allUsers, globalPointStatistics)
         globalPointStatistics.put(highestUser.facebookId, highestUser.points)
@@ -96,12 +96,11 @@ public class GlobalStatServiceImpl : GlobalStatService {
         putToJedis(THROW_COUNT, objectMapper.writeValueAsString(resultMap))
     }
 
-    private fun unorderedThrowCountsList(): LinkedList<Pair<Int, Int>> {
-        val globalThrowCounts = LinkedList<Pair<Int, Int>>()
-        val instances = exceptionInstanceCrud.findAll()
+    private fun unorderedThrowCountsList(): LinkedList<Pair<Int, Long>> {
+        val globalThrowCounts = LinkedList<Pair<Int, Long>>()
         exceptionTypeCrud.findAll().forEach {
             type ->
-            globalThrowCounts.add(Pair(type.id, instances.count { it.type.equals(type) }))
+            globalThrowCounts.add(Pair(type.id, exceptionInstanceCrud.getCountForType(type)))
         }
         return globalThrowCounts
     }

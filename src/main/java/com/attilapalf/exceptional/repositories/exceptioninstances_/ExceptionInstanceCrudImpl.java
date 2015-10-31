@@ -21,6 +21,7 @@ import com.attilapalfi.exceptional.model.Question;
  * Created by Attila on 2015-06-11.
  */
 public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
+
     @PersistenceContext
     private EntityManager em;
     @Autowired
@@ -64,6 +65,14 @@ public class ExceptionInstanceCrudImpl implements ExceptionInstanceCrudCustom {
         ExceptionInstance exception = buildExceptionInstance( instanceWrapper );
         em.persist( exception );
         return exception;
+    }
+
+    @Override
+    public long getCountForType( ExceptionType exceptionType ) {
+        return em.createQuery( "SELECT COUNT (e.id) FROM ExceptionInstance  e " +
+                "WHERE e.type = :type", Long.class )
+                .setParameter( "type", exceptionType )
+                .getSingleResult();
     }
 
     @NotNull

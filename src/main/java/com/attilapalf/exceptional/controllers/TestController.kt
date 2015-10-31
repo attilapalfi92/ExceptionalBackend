@@ -60,7 +60,7 @@ public class TestController {
     private fun createUser(): User {
         val user = User()
         user.facebookId = BigInteger.valueOf((Long.MAX_VALUE * Math.random()).toLong())
-        user.points = (Int.MAX_VALUE * Math.random()).toInt()
+        user.points = (6000 * (Math.random() - 0.5)).toInt()
         user.firstName = ""; user.lastName = ""
         return user
     }
