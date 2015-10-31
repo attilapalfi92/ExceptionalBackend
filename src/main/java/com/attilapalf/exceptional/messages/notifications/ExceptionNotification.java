@@ -1,10 +1,10 @@
 package com.attilapalf.exceptional.messages.notifications;
 
-import com.attilapalf.exceptional.entities.ExceptionInstance;
-import com.attilapalfi.exceptional.model.Question;
-
 import java.math.BigInteger;
 import java.util.List;
+
+import com.attilapalf.exceptional.entities.ExceptionInstance;
+import com.attilapalfi.exceptional.model.Question;
 
 /**
  * Created by 212461305 on 2015.07.04..
@@ -17,15 +17,17 @@ public class ExceptionNotification extends BaseNotification {
                                   int friendPoints, Question question ) {
         registration_ids = toGcmIds;
         data = new Data();
-        data.setTypeId(exception.getType().getId());
-        data.setInstanceId(exception.getId());
-        data.setFromWho(exception.getFromUser().getFacebookId());
-        data.setToWho(exception.getToUser().getFacebookId());
-        data.setTimeInMillis(exception.getDateTime().getTime());
-        data.setLongitude(exception.getLongitude());
-        data.setLatitude(exception.getLatitude());
-        data.setYourPoints(yourPoints);
-        data.setFriendPoints(friendPoints);
+        data.setTypeId( exception.getType().getId() );
+        data.setInstanceId( exception.getId() );
+        data.setFromWho( exception.getFromUser().getFacebookId() );
+        data.setToWho( exception.getToUser().getFacebookId() );
+        data.setTimeInMillis( exception.getDateTime().getTime() );
+        data.setLongitude( exception.getLongitude() );
+        data.setLatitude( exception.getLatitude() );
+        data.setYourPoints( yourPoints );
+        data.setFriendPoints( friendPoints );
+        data.setExceptionPointsForSender( exception.getPointsForSender() );
+        data.setExceptionPointsForReceiver( exception.getPointsForReceiver() );
         data.setQuestionText( question.getText() );
         data.setHasQuestion( question.getHasQuestion() );
         data.setYesIsCorrect( question.getYesIsCorrect() );
@@ -44,84 +46,86 @@ public class ExceptionNotification extends BaseNotification {
         private String questionText;
         private boolean yesIsCorrect;
         private boolean hasQuestion;
+        private int exceptionPointsForSender;
+        private int exceptionPointsForReceiver;
 
-        public Data() {
+        public Data( ) {
             notificationType = "exception";
         }
 
-        public int getTypeId() {
+        public int getTypeId( ) {
             return typeId;
         }
 
-        public void setTypeId(int typeId) {
+        public void setTypeId( int typeId ) {
             this.typeId = typeId;
         }
 
-        public BigInteger getInstanceId() {
+        public BigInteger getInstanceId( ) {
             return instanceId;
         }
 
-        public void setInstanceId(BigInteger instanceId) {
+        public void setInstanceId( BigInteger instanceId ) {
             this.instanceId = instanceId;
         }
 
-        public double getLongitude() {
+        public double getLongitude( ) {
             return longitude;
         }
 
-        public void setLongitude(double longitude) {
+        public void setLongitude( double longitude ) {
             this.longitude = longitude;
         }
 
-        public double getLatitude() {
+        public double getLatitude( ) {
             return latitude;
         }
 
-        public void setLatitude(double latitude) {
+        public void setLatitude( double latitude ) {
             this.latitude = latitude;
         }
 
-        public long getTimeInMillis() {
+        public long getTimeInMillis( ) {
             return timeInMillis;
         }
 
-        public void setTimeInMillis(long timeInMillis) {
+        public void setTimeInMillis( long timeInMillis ) {
             this.timeInMillis = timeInMillis;
         }
 
-        public BigInteger getFromWho() {
+        public BigInteger getFromWho( ) {
             return fromWho;
         }
 
-        public void setFromWho(BigInteger fromWho) {
+        public void setFromWho( BigInteger fromWho ) {
             this.fromWho = fromWho;
         }
 
-        public BigInteger getToWho() {
+        public BigInteger getToWho( ) {
             return toWho;
         }
 
-        public void setToWho(BigInteger toWho) {
+        public void setToWho( BigInteger toWho ) {
             this.toWho = toWho;
         }
 
-        public String getNotificationType() {
+        public String getNotificationType( ) {
             return notificationType;
         }
 
-        public int getYourPoints() {
+        public int getYourPoints( ) {
             return yourPoints;
         }
 
-        public void setYourPoints(int yourPoints) {
+        public void setYourPoints( int yourPoints ) {
             this.yourPoints = yourPoints;
         }
 
-        public int getFriendPoints() {
+        public int getFriendPoints( ) {
             return friendPoints;
         }
 
-        public void setFriendPoints(int friendPoints) {
+        public void setFriendPoints( int friendPoints ) {
             this.friendPoints = friendPoints;
         }
 
@@ -148,21 +152,37 @@ public class ExceptionNotification extends BaseNotification {
         public void setHasQuestion( boolean hasQuestion ) {
             this.hasQuestion = hasQuestion;
         }
+
+        public int getExceptionPointsForSender( ) {
+            return exceptionPointsForSender;
+        }
+
+        public void setExceptionPointsForSender( int exceptionPointsForSender ) {
+            this.exceptionPointsForSender = exceptionPointsForSender;
+        }
+
+        public int getExceptionPointsForReceiver( ) {
+            return exceptionPointsForReceiver;
+        }
+
+        public void setExceptionPointsForReceiver( int exceptionPointsForReceiver ) {
+            this.exceptionPointsForReceiver = exceptionPointsForReceiver;
+        }
     }
 
-    public List<String> getRegistration_ids() {
+    public List<String> getRegistration_ids( ) {
         return registration_ids;
     }
 
-    public void setRegistration_ids(List<String> registration_ids) {
+    public void setRegistration_ids( List<String> registration_ids ) {
         this.registration_ids = registration_ids;
     }
 
-    public Data getData() {
+    public Data getData( ) {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData( Data data ) {
         this.data = data;
     }
 }

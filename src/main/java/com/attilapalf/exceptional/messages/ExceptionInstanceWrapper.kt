@@ -31,7 +31,7 @@ public data class ExceptionInstanceWrapper(var fromWho: BigInteger = BigInteger(
                     text = e.questionText,
                     yesIsCorrect = e.isYesIsCorrect,
                     hasQuestion = e.isHasQuestion,
-                    isAnswered = e.isAnswered,
+                    answered = e.isAnswered,
                     answeredCorrectly = e.isAnsweredCorrectly
             )
     )
