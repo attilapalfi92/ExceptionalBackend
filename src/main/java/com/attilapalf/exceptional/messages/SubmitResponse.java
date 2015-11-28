@@ -12,6 +12,10 @@ public class SubmitResponse {
     public SubmitResponse( ) {
     }
 
+    public SubmitResponse( boolean submittedThisWeek ) {
+        this.submittedThisWeek = submittedThisWeek;
+    }
+
     public SubmitResponse( ExceptionTypeWrapper submittedType, boolean submittedThisWeek ) {
         this.submittedType = submittedType;
         this.submittedThisWeek = submittedThisWeek;
